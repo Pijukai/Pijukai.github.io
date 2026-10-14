@@ -1,7 +1,6 @@
 /* Background sound, shared by every page: quiet lofi music plus a very light rain.
-   - On by default. Browsers only allow sound after the visitor's first click, tap or key press,
-     so if playback is blocked it starts on that first interaction.
-   - One button (<button id="music">) mutes / unmutes both. The choice is remembered.
+   - Muted when a visit starts; the visitor turns it on with the speaker button (<button id="music">),
+     which turns both on or off. The choice lasts for the rest of the visit (this tab).
    - Keeps its place across pages (positions saved for this tab).
    Sounds (public domain, CC0 — free to use without attribution):
    - "Old Age" and "Opinions" by HoliznaCC0, "Chill Beats" collection: https://opengameart.org/content/chill-beats-collection
@@ -13,11 +12,10 @@
   const url = f => new URL('music/' + f, base).href;
   const TRACKS = ['old-age.m4a', 'opinions.m4a'].map(url), RAIN = url('rain.m4a');
 
-  const local = (k, v) => { try { return v === undefined ? localStorage.getItem(k) : localStorage.setItem(k, v); } catch { return null; } };
   const session = (k, v) => { try { return v === undefined ? sessionStorage.getItem(k) : sessionStorage.setItem(k, v); } catch { return null; } };
   const saved = () => { try { return JSON.parse(session('musicPos')) || {}; } catch { return {}; } };
 
-  let on = local('music') !== 'off';
+  let on = session('musicOn') === '1';                 // muted until the visitor turns it on
   const pos = saved();
   let i = (pos.i || 0) % TRACKS.length, r = pos.r ? 1 : 0;   // current track, active rain element
 
@@ -103,7 +101,7 @@
   function waiting(w) { isWaiting = w; paint(); }
   async function toggle() {
     if (on && music.paused) { if (await play(true)) unlisten(); return; }   // blocked until now: this click starts it
-    on = !on; local('music', on ? 'on' : 'off'); paint();
+    on = !on; session('musicOn', on ? '1' : '0'); paint();
     if (on) { [music, ...rain].forEach(a => a.preload = 'auto'); if (!(await play(true))) listen(); }
     else { unlisten(); waiting(false); fadeTo(0, 500); }
   }

@@ -4,7 +4,8 @@
    (other sites, PDFs, new tabs, a failed fetch) falls back to a normal page load.
    Pages announce themselves with two events: "page:leave" (stop timers) and "page:enter". */
 (() => {
-  if (!window.fetch || !history.pushState || !window.DOMParser) return;
+  // pages opened straight from disk (file://) can't be fetched: links then load normally
+  if (location.protocol === 'file:' || !window.fetch || !history.pushState || !window.DOMParser) return;
   const SHARED = /(^|\/)(music|router)\.js$/;          // shared scripts: already running, never re-run
   history.scrollRestoration = 'manual';
   let latest = null;
