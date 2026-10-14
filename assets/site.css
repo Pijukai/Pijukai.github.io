@@ -31,6 +31,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .links a[aria-current=page]{color:var(--ink);background:rgba(255,255,255,.1)}
 .links a.cta{margin-left:8px;color:var(--ink);border:1px solid var(--line2)}
 .links a.cta:hover,.links a.cta[aria-current=page]{background:var(--ink);color:#17141f;border-color:var(--ink)}
+.mute{flex:none;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line2);color:var(--muted);transition:color .15s,border-color .15s}
+.mute:hover{color:var(--ink)}
+.mute[aria-pressed=true]{color:var(--accent);border-color:rgba(240,178,122,.4)}
+.mute svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mute .spk{fill:currentColor}
+.mute[aria-pressed=true] .off,.mute[aria-pressed=false] .on{display:none}
 
 /* ---------- page ---------- */
 main{flex:1;width:100%;max-width:var(--max);margin:0 auto;padding:56px 24px 80px}
@@ -160,7 +166,8 @@ p+p{margin-top:12px}
 @media (max-width:760px){
   html{scroll-padding-top:120px}
   .top-in{flex-wrap:wrap;gap:10px;padding:12px 16px}
-  .links{width:calc(100% + 32px);margin:0 -16px;padding:0 12px;overflow-x:auto;scrollbar-width:none}
+  .mute{order:2}
+  .links{order:3;width:calc(100% + 32px);margin:0 -16px;padding:0 12px;overflow-x:auto;scrollbar-width:none}
   .links::-webkit-scrollbar{display:none}
   .links a{padding:6px 10px;font-size:14px}
   main{padding:36px 16px 64px}
