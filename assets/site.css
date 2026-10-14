@@ -174,8 +174,6 @@ section.cv+section.cv{margin-top:44px}
 .cv-skills{display:grid;grid-template-columns:200px 1fr;gap:8px 22px;font-size:15px}
 .cv-skills dt{color:var(--ink)}
 .cv-skills dd{color:var(--muted)}
-.pdf-box{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px 24px}
-.pdf-box h2{margin-bottom:4px}
 
 /* contact */
 .contacts{list-style:none;display:grid;gap:12px}
