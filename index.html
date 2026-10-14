@@ -140,7 +140,8 @@ body.lamp-off .mote{display:none}
 /* ---------- HERO ---------- */
 .hero{position:absolute;left:0;right:0;top:6vh;z-index:5;text-align:center;pointer-events:none;padding:0 16px}
 .hero .hi{font:italic 400 clamp(26px,3.6vw,54px)/1 'Instrument Serif',serif;opacity:.95}
-.hero h1{font:400 clamp(60px,11vw,170px)/.9 'Instrument Serif',serif;letter-spacing:-.02em;text-shadow:0 0 40px rgba(255,190,140,.25)}
+.hero h1 .nw{white-space:nowrap}
+.hero h1{font:400 clamp(44px,8vw,140px)/.95 'Instrument Serif',serif;text-wrap:balance;letter-spacing:-.02em;text-shadow:0 0 40px rgba(255,190,140,.25)}
 .hero p{max-width:620px;margin:14px auto 0;font-size:clamp(14px,1.3vw,19px);line-height:1.45;color:rgba(246,239,230,.85);text-shadow:0 2px 12px rgba(0,0,0,.4)}
 
 .vignette{position:fixed;inset:0;z-index:6;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 50%,rgba(5,3,15,.55) 100%)}
@@ -150,51 +151,15 @@ body.lamp-off .mote{display:none}
 .nav a{text-decoration:none;font-size:clamp(16px,1.4vw,21px);color:rgba(246,239,230,.62);text-shadow:0 2px 10px rgba(0,0,0,.5);transition:color .2s,transform .2s}
 .nav a:hover{color:#fff;transform:translateX(4px)}
 .nav a.active{font:400 clamp(28px,2.6vw,40px)/1 'Instrument Serif',serif;color:#fff}
-.nav a:focus-visible,.panel button:focus-visible{outline:2px solid var(--accent2);outline-offset:4px;border-radius:8px}
+.nav a:focus-visible{outline:2px solid var(--accent2);outline-offset:4px;border-radius:8px}
 
-/* ---------- PANEL ---------- */
-.scrim{position:fixed;inset:0;z-index:20;background:rgba(8,5,20,.5);backdrop-filter:blur(3px);opacity:0;transition:opacity .35s}
-.scrim.show{opacity:1}
-.panel{position:fixed;left:50%;top:50%;z-index:21;width:min(800px,calc(100vw - 32px));max-height:min(82vh,780px);display:flex;flex-direction:column;overflow:hidden;
-  background:linear-gradient(160deg,rgba(42,33,82,.94),rgba(21,16,42,.96));border:1px solid rgba(255,255,255,.12);border-radius:20px;box-shadow:0 40px 120px rgba(0,0,0,.6);
-  opacity:0;transform:translate(-50%,-44%) scale(.9);transition:opacity .35s,transform .45s cubic-bezier(.2,.8,.2,1)}
-.panel.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
-.panel header{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
-.panel header .d{display:flex;gap:6px}.panel header .d i{width:10px;height:10px;border-radius:50%;display:block}
-.panel h2{font:400 28px/1 'Instrument Serif',serif;flex:1}
-.close{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);font-size:16px}
-.close:hover{background:rgba(255,255,255,.16)}
-.panel-body{overflow:auto;padding:24px 26px 30px}
-.lead{font:400 clamp(22px,2.4vw,30px)/1.25 'Instrument Serif',serif;margin-bottom:16px}
-.panel-body p{color:var(--muted);line-height:1.65;margin-bottom:12px}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.chips span{padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
-.work{border-radius:14px;overflow:hidden;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);text-decoration:none;display:flex;flex-direction:column;transition:transform .25s,border-color .25s}
-.work:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.25)}
-.thumb{aspect-ratio:16/10;display:grid;place-items:center;font:400 54px 'Instrument Serif',serif;color:rgba(255,255,255,.9)}
-.work div.b{padding:14px 16px 16px}
-.tag{font:500 11px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
-.work h3{font-size:18px;margin:4px 0 6px}
-.work p{font-size:14px;margin:0}
-.more{display:inline-block;margin-top:10px;font-size:13px;color:var(--accent2)}
-.tl{list-style:none;border-left:1px solid rgba(255,255,255,.15);margin:6px 0 22px 6px}
-.tl li{position:relative;padding:0 0 18px 20px}
-.tl li::before{content:"";position:absolute;left:-5px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--accent)}
-.tl strong{display:block}.tl span{color:var(--muted);font-size:14px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:#f6efe6;color:#1d1733;font-weight:700;text-decoration:none;font-size:15px}
-.btn.ghost{background:rgba(255,255,255,.08);color:var(--ink);border:1px solid rgba(255,255,255,.14)}
-.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-.big{font:400 clamp(26px,4vw,44px)/1.1 'Instrument Serif',serif;text-decoration:none;word-break:break-all}
-.big:hover{color:var(--accent)}
 
 @media (max-width:760px){
   .hero{top:8vh}
   .mist{opacity:.1}
-  .nav{left:50%;bottom:10px;transform:translateX(-50%);flex-direction:row;gap:2px;padding:5px;border-radius:999px;background:rgba(15,10,30,.6);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1)}
+  .nav{left:50%;bottom:10px;transform:translateX(-50%);flex-direction:row;flex-wrap:wrap;justify-content:center;width:max-content;max-width:calc(100vw - 24px);gap:2px;padding:5px;border-radius:22px;background:rgba(15,10,30,.6);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1)}
   .nav a,.nav a.active{font:500 13px 'DM Sans',sans-serif;padding:7px 10px;border-radius:999px;white-space:nowrap}
   .nav a:hover{transform:none}
-  .panel{top:calc(50% - 28px);max-height:calc(100vh - 140px)}
   .nav a.active{background:rgba(255,255,255,.15)}
 }
 @media (prefers-reduced-motion:reduce){
@@ -409,60 +374,22 @@ body.lamp-off .mote{display:none}
 <div class="grain" aria-hidden="true"></div>
 
 <nav class="nav" id="nav" aria-label="Main">
-  <a href="#home" data-s="home" class="active">Home</a>
-  <a href="#works" data-s="works">Works</a>
-  <a href="#about" data-s="about">About me</a>
-  <a href="#resume" data-s="resume">Resume</a>
-  <a href="#contact" data-s="contact">Contact</a>
+  <a href="index.html" class="active" aria-current="page">Home</a>
+  <a href="projects.html">Projects</a>
+  <a href="publications.html">Publication</a>
+  <a href="resume.html">Resume</a>
+  <a href="contact.html">Contact Me</a>
+  <a href="about.html">About Me</a>
 </nav>
 
-<div class="scrim" id="scrim" hidden></div>
-<section class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle" hidden>
-  <header>
-    <span class="d"><i style="background:#ff6b6b"></i><i style="background:#ffc04d"></i><i style="background:#4cd07d"></i></span>
-    <h2 id="panelTitle"></h2>
-    <button class="close" id="closeBtn" aria-label="Close">✕</button>
-  </header>
-  <div class="panel-body" id="panelBody"></div>
-</section>
 
 <script>
 /* =========================================================
    ✏️  EDIT YOUR INFO HERE — everything on the site comes from this
    ========================================================= */
 const CONFIG = {
-  name: "Your Name",
-  tagline: "Master's student and future ML researcher — curious about how models learn, and how to make them useful.",
-  email: "you@example.com",
-  resumeUrl: "resume.pdf",            // put resume.pdf in the repo root
-  socials: [
-    { label: "LinkedIn", url: "https://www.linkedin.com/in/yourname" },
-    { label: "GitHub",   url: "https://github.com/yourname" },
-    { label: "Google Scholar", url: "https://scholar.google.com/" }
-  ],
-  about: {
-    lead: "I'm a master's student working toward a career in machine learning research.",
-    text: [
-      "Write two or three sentences here about your research interests, what you're studying, and the questions that keep you up at night.",
-      "Add a personal line too — what you do when it's raining outside and the training run still has 6 hours left."
-    ],
-    skills: ["Python", "PyTorch", "Deep learning", "Statistics", "Linear algebra", "Experiment design", "LaTeX"]
-  },
-  works: [
-    { title: "Thesis project",     tag: "Research",      year: "2026", desc: "One line on the question, the method, and what you found.", url: "#" },
-    { title: "Paper reproduction", tag: "Deep learning", year: "2026", desc: "Re-implemented a paper from scratch and compared results.", url: "#" },
-    { title: "Course project",     tag: "ML",            year: "2025", desc: "A model, a dataset, and an honest evaluation.",            url: "#" },
-    { title: "Side project",       tag: "Open source",   year: "2025", desc: "A small tool or library you built and shared.",            url: "#" }
-  ],
-  experience: [
-    { role: "Research Assistant", org: "Lab name",  years: "2025 — now" },
-    { role: "Teaching Assistant", org: "Course",    years: "2024 — 2025" },
-    { role: "ML Intern",          org: "Company",   years: "2024" }
-  ],
-  education: [
-    { role: "M.Sc. in …", org: "University", years: "2025 — 2027" },
-    { role: "B.Sc. in …", org: "University", years: "2022 — 2025" }
-  ]
+  name: "Julien Barozet-Golbery",
+  tagline: "Master's student and future ML researcher — curious about how models learn, and how to make them useful."
 };
 /* ========================================================= */
 
@@ -474,7 +401,12 @@ const rand = (a, b) => a + Math.random() * (b - a);
 
 /* ---------- fill content ---------- */
 document.title = `${CONFIG.name} — Portfolio`;
-$('#heroName').textContent = CONFIG.name;
+{ // first word, then the rest kept on one line so a hyphenated surname never splits
+  const [first, ...rest] = CONFIG.name.split(' ');
+  const h = $('#heroName'); h.textContent = first + ' ';
+  const nw = document.createElement('span'); nw.className = 'nw'; nw.textContent = rest.join(' ');
+  h.appendChild(nw);
+}
 $('#heroTag').textContent = CONFIG.tagline;
 
 
@@ -731,87 +663,6 @@ async function trainLoop() {
 }
 setTimeout(async () => { await typeCode(); trainLoop(); }, 500);
 
-/* ---------- sections ---------- */
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const hues = [265, 20, 190, 330, 140, 45];
-const SECTIONS = {
-  works: { title: 'Selected works', icon: '📁', screen: '📁 Works', html: () =>
-    `<div class="grid">${CONFIG.works.map((w, i) => `
-      <a class="work" href="${esc(w.url)}">
-        <div class="thumb" style="background:linear-gradient(135deg,hsl(${hues[i % 6]} 70% 62%),hsl(${(hues[i % 6] + 40) % 360} 65% 42%))">${String(i + 1).padStart(2, '0')}</div>
-        <div class="b"><span class="tag">${esc(w.tag)} · ${esc(w.year)}</span><h3>${esc(w.title)}</h3><p>${esc(w.desc)}</p><span class="more">View case study →</span></div>
-      </a>`).join('')}</div>` },
-  about: { title: 'About me', icon: '🙂', screen: '🙂 About me', html: () =>
-    `<p class="lead">${esc(CONFIG.about.lead)}</p>${CONFIG.about.text.map(t => `<p>${esc(t)}</p>`).join('')}
-     <div class="chips">${CONFIG.about.skills.map(s => `<span>${esc(s)}</span>`).join('')}</div>` },
-  resume: { title: 'Resume', icon: '📄', screen: '📄 Resume', html: () =>
-    `<p class="tag">Experience</p><ul class="tl">${CONFIG.experience.map(x => `<li><strong>${esc(x.role)} — ${esc(x.org)}</strong><span>${esc(x.years)}</span></li>`).join('')}</ul>
-     <p class="tag">Education</p><ul class="tl">${CONFIG.education.map(x => `<li><strong>${esc(x.role)} — ${esc(x.org)}</strong><span>${esc(x.years)}</span></li>`).join('')}</ul>
-     <a class="btn" href="${esc(CONFIG.resumeUrl)}" target="_blank" rel="noopener">Download résumé (PDF) ↓</a>` },
-  contact: { title: 'Say hi', icon: '✉️', screen: '✉️ Say hi', html: () =>
-    `<p class="lead">Want to talk research, collaborate, or just say hi?</p>
-     <a class="big" href="mailto:${esc(CONFIG.email)}">${esc(CONFIG.email)}</a>
-     <div class="row"><button class="btn" id="copyMail">Copy email</button>
-     ${CONFIG.socials.map(s => `<a class="btn ghost" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)} ↗</a>`).join('')}</div>` }
-};
-
-const panel = $('#panel'), scrim = $('#scrim');
-let lastFocus = null;
-function setActive(s) {
-  document.querySelectorAll('#nav a').forEach(a => a.classList.toggle('active', a.dataset.s === s));
-}
-function openSection(s) {
-  const sec = SECTIONS[s]; if (!sec) return closePanel();
-  setActive(s);
-  $('#panelTitle').textContent = sec.title;
-  $('#panelBody').innerHTML = sec.html();
-  $('#panelBody').scrollTop = 0;
-  const cm = $('#copyMail');
-  if (cm) cm.onclick = () => navigator.clipboard?.writeText(CONFIG.email).then(() => cm.textContent = 'Copied ✓');
-  clearTimeout(closeTimer);                 // a close still animating must not hide the panel again
-  if (panel.hidden) {
-    lastFocus = document.activeElement;
-    panel.hidden = scrim.hidden = false;
-    requestAnimationFrame(() => { panel.classList.add('show'); scrim.classList.add('show'); });
-  } else {
-    panel.classList.add('show'); scrim.classList.add('show');
-  }
-  setTimeout(() => $('#closeBtn').focus(), 50);
-}
-let closeTimer;
-function closePanel() {
-  setActive('home');
-  if (!panel.hidden && panel.classList.contains('show')) {
-    panel.classList.remove('show'); scrim.classList.remove('show');
-    clearTimeout(closeTimer);
-    closeTimer = setTimeout(() => { panel.hidden = scrim.hidden = true; }, 380);
-    lastFocus?.focus?.();
-  }
-}
-function route() {
-  const s = location.hash.slice(1);
-  SECTIONS[s] ? openSection(s) : closePanel();
-}
-/* Every navigation is a real history step, so Back/Forward always retrace it.
-   Opening a section adds #section; closing adds #home. Only the hash is used,
-   which works everywhere (GitHub Pages, local files, sandboxed previews). */
-function go(s) {
-  if (!SECTIONS[s]) s = 'home';
-  const cur = location.hash.slice(1);
-  if (s === 'home' && !SECTIONS[cur]) return route();   // already home
-  if (cur === s) return route();
-  location.hash = s;                        // fires hashchange → route()
-}
-addEventListener('hashchange', route);
-$('#nav').addEventListener('click', e => {
-  const a = e.target.closest('a'); if (!a) return;
-  e.preventDefault(); go(a.dataset.s);
-});
-const shut = () => go('home');
-$('#closeBtn').addEventListener('click', shut);
-scrim.addEventListener('click', shut);
-addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) shut(); });
-if (location.hash) route();
 </script>
 </body>
 </html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact Me — Julien Barozet-Golbery</title>
+<meta name="description" content="Get in touch with Julien Barozet-Golbery.">
+<meta name="theme-color" content="#16141d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <nav class="top-in" aria-label="Main">
+    <a class="brand" href="index.html">Julien Barozet-Golbery</a>
+    <ul class="links">
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="publications.html">Publication</a></li>
+      <li><a href="resume.html">Resume</a></li>
+      <li><a href="contact.html" aria-current="page">Contact Me</a></li>
+      <li><a href="about.html">About Me</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="page-head">
+    <span class="eyebrow">Contact Me</span>
+    <h1>Let’s talk</h1>
+    <p class="intro">Research, collaborations, internships, or just to say hi — I usually reply within a few days.</p>
+  </div>
+
+  <div class="contact-grid">
+    <div class="card">
+      <span class="tag">Email</span>
+      <!-- ✏️ Change the address in both places: href and the text, and in the script below -->
+      <p style="margin:10px 0 16px"><a class="email" id="email" href="mailto:you@example.com">you@example.com</a></p>
+      <button class="btn" type="button" id="copy">Copy email</button>
+
+      <ul class="socials" style="margin-top:24px">
+        <li><a href="https://www.linkedin.com/in/yourname" target="_blank" rel="noopener">LinkedIn <span>↗</span></a></li>
+        <li><a href="https://github.com/yourname" target="_blank" rel="noopener">GitHub <span>↗</span></a></li>
+        <li><a href="https://scholar.google.com/" target="_blank" rel="noopener">Google Scholar <span>↗</span></a></li>
+      </ul>
+    </div>
+
+    <form class="card" id="form" novalidate>
+      <span class="tag">Write a message</span>
+      <label>Your name<input name="name" autocomplete="name" required></label>
+      <label>Subject<input name="subject" required></label>
+      <label>Message<textarea name="message" required></textarea></label>
+      <button class="btn" type="submit" style="justify-self:start">Open in my email app →</button>
+      <p class="hint">This opens your own email client with the message filled in.</p>
+      <p class="status" id="status" role="status"></p>
+    </form>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="foot-in"><span>© <span class="yr"></span> Julien Barozet-Golbery</span><a href="index.html">← Back home</a></div>
+</footer>
+
+<script>
+const EMAIL = 'you@example.com';
+document.querySelector('.yr').textContent = new Date().getFullYear();
+
+const copy = document.getElementById('copy');
+copy.addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(EMAIL); copy.textContent = 'Copied ✓'; }
+  catch { copy.textContent = EMAIL; }
+  setTimeout(() => copy.textContent = 'Copy email', 2000);
+});
+
+const form = document.getElementById('form'), status = document.getElementById('status');
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const d = Object.fromEntries(new FormData(form));
+  const missing = ['name', 'subject', 'message'].filter(k => !d[k].trim());
+  if (missing.length) {
+    status.textContent = 'Please fill in every field.';
+    form.elements[missing[0]].focus();
+    return;
+  }
+  const body = `${d.message.trim()}\n\n— ${d.name.trim()}`;
+  location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(d.subject.trim())}&body=${encodeURIComponent(body)}`;
+  status.textContent = 'Opening your email app…';
+});
+</script>
+</body>
+</html>

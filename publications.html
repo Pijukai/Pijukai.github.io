@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Publication — Julien Barozet-Golbery</title>
+<meta name="description" content="Papers and preprints by Julien Barozet-Golbery.">
+<meta name="theme-color" content="#16141d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <nav class="top-in" aria-label="Main">
+    <a class="brand" href="index.html">Julien Barozet-Golbery</a>
+    <ul class="links">
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="publications.html" aria-current="page">Publication</a></li>
+      <li><a href="resume.html">Resume</a></li>
+      <li><a href="contact.html">Contact Me</a></li>
+      <li><a href="about.html">About Me</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="page-head">
+    <span class="eyebrow">Publication</span>
+    <h1>Papers &amp; preprints</h1>
+    <p class="intro">Also on <a href="https://scholar.google.com/" target="_blank" rel="noopener">Google Scholar ↗</a></p>
+  </div>
+
+  <!-- ✏️ Group by year. Put your own name inside <strong> so it stands out in the author list.
+       The BibTeX inside <pre> is what the "BibTeX" button shows and copies. -->
+  <h2 class="year">2026</h2>
+  <ol class="pubs">
+    <li class="pub card">
+      <h3>Title of your paper goes here</h3>
+      <p class="authors"><strong>Julien Barozet-Golbery</strong>, Co-author One, Co-author Two</p>
+      <p class="venue">Workshop or conference name, 2026</p>
+      <div class="actions">
+        <a class="btn ghost sm" href="#">PDF ↗</a>
+        <a class="btn ghost sm" href="#">arXiv ↗</a>
+        <a class="btn ghost sm" href="#">Code ↗</a>
+        <button class="btn ghost sm" type="button" data-bib aria-expanded="false">BibTeX</button>
+      </div>
+      <div class="bib">
+<pre>@inproceedings{barozetgolbery2026title,
+  title     = {Title of your paper goes here},
+  author    = {Barozet-Golbery, Julien and One, Co-author and Two, Co-author},
+  booktitle = {Workshop or conference name},
+  year      = {2026}
+}</pre>
+      </div>
+    </li>
+  </ol>
+
+  <h2 class="year">2025</h2>
+  <ol class="pubs">
+    <li class="pub card">
+      <h3>Another paper or preprint title</h3>
+      <p class="authors">Co-author One, <strong>Julien Barozet-Golbery</strong></p>
+      <p class="venue">arXiv preprint, 2025</p>
+      <div class="actions">
+        <a class="btn ghost sm" href="#">arXiv ↗</a>
+        <button class="btn ghost sm" type="button" data-bib aria-expanded="false">BibTeX</button>
+      </div>
+      <div class="bib">
+<pre>@article{barozetgolbery2025another,
+  title   = {Another paper or preprint title},
+  author  = {One, Co-author and Barozet-Golbery, Julien},
+  journal = {arXiv preprint},
+  year    = {2025}
+}</pre>
+      </div>
+    </li>
+  </ol>
+</main>
+
+<footer class="foot">
+  <div class="foot-in"><span>© <span class="yr"></span> Julien Barozet-Golbery</span><a href="index.html">← Back home</a></div>
+</footer>
+
+<script>
+document.querySelector('.yr').textContent = new Date().getFullYear();
+
+/* BibTeX: toggle the block, and add a Copy button inside it. */
+document.querySelectorAll('[data-bib]').forEach(btn => {
+  const box = btn.closest('.pub').querySelector('.bib');
+  const copy = document.createElement('button');
+  copy.type = 'button'; copy.className = 'btn sm'; copy.textContent = 'Copy';
+  copy.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(box.querySelector('pre').textContent.trim()); copy.textContent = 'Copied ✓'; }
+    catch { copy.textContent = 'Select & copy'; }
+    setTimeout(() => copy.textContent = 'Copy', 1800);
+  });
+  box.appendChild(copy);
+  btn.addEventListener('click', () => {
+    const open = box.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+  });
+});
+</script>
+</body>
+</html>
