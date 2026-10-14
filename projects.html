@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Projects — Julien Barozet-Golbery</title>
-<meta name="description" content="Research and engineering projects by Julien Barozet-Golbery.">
+<meta name="description" content="Research projects by Julien Barozet-Golbery.">
 <meta name="theme-color" content="#16141d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,8 +20,8 @@
       <li><a href="projects.html" aria-current="page">Projects</a></li>
       <li><a href="publications.html">Publication</a></li>
       <li><a href="resume.html">Resume</a></li>
-      <li><a href="contact.html">Contact Me</a></li>
       <li><a href="about.html">About Me</a></li>
+      <li><a class="cta" href="contact.html">Contact Me</a></li>
     </ul>
   </nav>
 </header>
@@ -29,75 +29,87 @@
 <main id="main">
   <div class="page-head">
     <span class="eyebrow">Projects</span>
-    <h1>Things I’ve built</h1>
-    <p class="intro">Research projects, reproductions and tools. Filter by topic below.</p>
+    <h1>Research projects</h1>
+    <p class="intro">World models, generative models and NeuroAI — with EPFL labs, CERN and NVIDIA. Click a project for the details.</p>
   </div>
 
-  <div class="filters" id="filters" role="group" aria-label="Filter projects"></div>
-
-  <!-- ✏️ One <li class="project"> per project. data-tags is a comma-separated list used by the filter. -->
-  <ul class="projects" id="projects">
-    <li class="project card" data-tags="Research">
-      <div class="meta"><span class="tag">Research · 2026</span></div>
-      <h3>Thesis project</h3>
-      <p>One line on the question, the method, and what you found.</p>
-      <div class="actions">
-        <a class="btn ghost sm" href="#">Code ↗</a>
-        <a class="btn ghost sm" href="#">Report ↗</a>
+  <!-- ✏️ One <li class="project"> per project, shown in the order written here:
+       add each new one at the top so the latest entry comes first.
+       Each card links to its own page in projects/ (copy one of those files for a new project).
+       Picture: replace <div class="thumb" aria-hidden="true"></div> with
+         <div class="thumb"><img src="assets/projects/my-project.jpg" alt="Short description of the image"></div> -->
+  <ul class="projects">
+    <li class="project card">
+      <div class="thumb" aria-hidden="true"></div>
+      <div class="body">
+        <div class="meta"><p class="tag">EPFL NeuroAI Lab</p><span class="date">Feb 2026 — Present</span></div>
+        <h3><a href="projects/brain.html">BRAIN Project</a></h3>
+        <dl class="outcome">
+          <dt>Objective</dt><dd>Reconstruct the image or sound a person perceives from non-invasive EEG recordings — highly noisy, subject-dependent time series — in real time.</dd>
+          <dt>Result</dt><dd>End-to-end EEG-to-image demo with &lt;1 s latency, retaining ~70% performance with only 25% of the data and 1/5 of the training time for subject adaptation.</dd>
+        </dl>
+        <ul class="kw" aria-label="Keywords"><li>EEG</li><li>Foundation models</li><li>LoRA</li><li>CLIP / CLAP</li><li>NeuroAI</li></ul>
+        <span class="more" aria-hidden="true">Read more →</span>
       </div>
     </li>
-    <li class="project card" data-tags="Deep learning">
-      <div class="meta"><span class="tag">Deep learning · 2026</span></div>
-      <h3>Paper reproduction</h3>
-      <p>Re-implemented a paper from scratch and compared results.</p>
-      <div class="actions">
-        <a class="btn ghost sm" href="#">Code ↗</a>
+    <li class="project card">
+      <div class="thumb" aria-hidden="true"></div>
+      <div class="body">
+        <div class="meta"><p class="tag">Supervised by an NVIDIA ML Engineer</p><span class="date">Sep 2026 — Present</span></div>
+        <h3><a href="projects/surgical-world-models.html">Evaluation Suite for Surgical Robot World Models</a></h3>
+        <dl class="outcome">
+          <dt>Objective</dt><dd>Measure whether surgical robot world models follow the commanded actions and produce biomechanically plausible tissue behaviour.</dd>
+          <dt>Result</dt><dd>Evaluation suite applied to NVIDIA Cosmos 3 to guide model development (ongoing).</dd>
+        </dl>
+        <ul class="kw" aria-label="Keywords"><li>World models</li><li>Evaluation</li><li>Robotics</li><li>NVIDIA Cosmos</li></ul>
+        <span class="more" aria-hidden="true">Read more →</span>
       </div>
     </li>
-    <li class="project card" data-tags="Machine learning">
-      <div class="meta"><span class="tag">Machine learning · 2025</span></div>
-      <h3>Course project</h3>
-      <p>A model, a dataset, and an honest evaluation.</p>
-      <div class="actions">
-        <a class="btn ghost sm" href="#">Code ↗</a>
+    <li class="project card">
+      <div class="thumb" aria-hidden="true"></div>
+      <div class="body">
+        <div class="meta"><p class="tag">EPFL VITA Lab</p><span class="date">Sep 2026 — Present</span></div>
+        <h3><a href="projects/egocentric-attention.html">Improving Attention in Egocentric World Models</a></h3>
+        <dl class="outcome">
+          <dt>Objective</dt><dd>Replace full attention in diffusion world models for egocentric driving with efficient alternatives such as register-token attention (à la VGGT-Omega).</dd>
+          <dt>Result</dt><dd>Ongoing — targeting reduced training and inference time.</dd>
+        </dl>
+        <ul class="kw" aria-label="Keywords"><li>World models</li><li>Diffusion</li><li>Attention</li><li>Autonomous driving</li></ul>
+        <span class="more" aria-hidden="true">Read more →</span>
       </div>
     </li>
-    <li class="project card" data-tags="Open source">
-      <div class="meta"><span class="tag">Open source · 2025</span></div>
-      <h3>Side project</h3>
-      <p>A small tool or library you built and shared.</p>
-      <div class="actions">
-        <a class="btn ghost sm" href="#">GitHub ↗</a>
+    <li class="project card">
+      <div class="thumb" aria-hidden="true"></div>
+      <div class="body">
+        <div class="meta"><p class="tag">CERN</p><span class="date">Sep 2025 — Feb 2026</span></div>
+        <h3><a href="projects/atlas.html">ATLAS Project</a></h3>
+        <dl class="outcome">
+          <dt>Objective</dt><dd>Accelerate Geant4-based Monte Carlo calorimeter simulation for the LHC with generative ML.</dd>
+          <dt>Result</dt><dd>Results close to established SOTA while using less memory, using Stochastic Interpolants (low-res) and a consistency-distilled EDM model (high-res).</dd>
+        </dl>
+        <ul class="kw" aria-label="Keywords"><li>Generative models</li><li>Stochastic interpolants</li><li>Consistency distillation</li><li>Particle physics</li></ul>
+        <span class="more" aria-hidden="true">Read more →</span>
+      </div>
+    </li>
+    <li class="project card">
+      <div class="thumb" aria-hidden="true"></div>
+      <div class="body">
+        <div class="meta"><p class="tag">EPFL LASTRO Lab</p><span class="date">Sep 2025 — Dec 2025</span></div>
+        <h3><a href="projects/dark-matter.html">Dark Matter Density Generation</a></h3>
+        <dl class="outcome">
+          <dt>Objective</dt><dd>Generate dark matter galaxy cluster density maps directly from physical parameters.</dd>
+          <dt>Result</dt><dd>Simulation time cut from 5–7 days to minutes, with 0.8–1.0 cross-correlation at large scales and a near-zero log-PSD ratio across all frequencies.</dd>
+        </dl>
+        <ul class="kw" aria-label="Keywords"><li>Diffusion Transformer</li><li>DDPM</li><li>AdaLN</li><li>Astrophysics</li></ul>
+        <span class="more" aria-hidden="true">Read more →</span>
       </div>
     </li>
   </ul>
-  <p class="muted" id="empty" hidden>No projects with this tag yet.</p>
 </main>
 
 <footer class="foot">
   <div class="foot-in"><span>© <span class="yr"></span> Julien Barozet-Golbery</span><a href="index.html">← Back home</a></div>
 </footer>
-
-<script>
-document.querySelector('.yr').textContent = new Date().getFullYear();
-
-/* Tag filter — buttons are built from the data-tags on each project. */
-const items = [...document.querySelectorAll('.project')];
-const tagsOf = el => el.dataset.tags.split(',').map(t => t.trim()).filter(Boolean);
-const tags = ['All', ...new Set(items.flatMap(tagsOf))];
-const bar = document.getElementById('filters');
-bar.innerHTML = tags.map(t => `<button type="button" aria-pressed="${t === 'All'}"></button>`).join('');
-[...bar.children].forEach((b, i) => { b.textContent = tags[i]; b.dataset.tag = tags[i]; });
-if (tags.length <= 2) bar.hidden = true;
-
-bar.addEventListener('click', e => {
-  const b = e.target.closest('button'); if (!b) return;
-  const tag = b.dataset.tag;
-  bar.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
-  let shown = 0;
-  items.forEach(el => { const on = tag === 'All' || tagsOf(el).includes(tag); el.hidden = !on; shown += on; });
-  document.getElementById('empty').hidden = shown > 0;
-});
-</script>
+<script>document.querySelector('.yr').textContent = new Date().getFullYear();</script>
 </body>
 </html>

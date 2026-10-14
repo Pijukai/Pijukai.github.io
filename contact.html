@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Contact Me — Julien Barozet-Golbery</title>
-<meta name="description" content="Get in touch with Julien Barozet-Golbery.">
+<meta name="description" content="Email and phone for Julien Barozet-Golbery.">
 <meta name="theme-color" content="#16141d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,8 +20,8 @@
       <li><a href="projects.html">Projects</a></li>
       <li><a href="publications.html">Publication</a></li>
       <li><a href="resume.html">Resume</a></li>
-      <li><a href="contact.html" aria-current="page">Contact Me</a></li>
       <li><a href="about.html">About Me</a></li>
+      <li><a class="cta" href="contact.html" aria-current="page">Contact Me</a></li>
     </ul>
   </nav>
 </header>
@@ -30,32 +30,31 @@
   <div class="page-head">
     <span class="eyebrow">Contact Me</span>
     <h1>Let’s talk</h1>
-    <p class="intro">Research, collaborations, internships, or just to say hi — I usually reply within a few days.</p>
+    <p class="intro">Research, collaborations, internships, or just to say hi.</p>
   </div>
 
-  <div class="contact-grid">
-    <div class="card">
-      <span class="tag">Email</span>
-      <!-- ✏️ Change the address in both places: href and the text, and in the script below -->
-      <p style="margin:10px 0 16px"><a class="email" id="email" href="mailto:you@example.com">you@example.com</a></p>
-      <button class="btn" type="button" id="copy">Copy email</button>
+  <!-- ✏️ data-copy is what the Copy button puts on the clipboard -->
+  <ul class="contacts">
+    <li class="card contact">
+      <span class="tag">Email · Personal</span>
+      <a class="email" href="mailto:julienbarozet@gmail.com">julienbarozet@gmail.com</a>
+      <button class="btn ghost sm" type="button" data-copy="julienbarozet@gmail.com">Copy</button>
+    </li>
+    <li class="card contact">
+      <span class="tag">Email · EPFL</span>
+      <a class="email" href="mailto:julien.barozet-golbery@epfl.ch">julien.barozet-golbery@epfl.ch</a>
+      <button class="btn ghost sm" type="button" data-copy="julien.barozet-golbery@epfl.ch">Copy</button>
+    </li>
+    <li class="card contact">
+      <span class="tag">Phone</span>
+      <a class="email" href="tel:+33783895795">+33 7 83 89 57 95</a>
+      <button class="btn ghost sm" type="button" data-copy="+33783895795">Copy</button>
+    </li>
+  </ul>
 
-      <ul class="socials" style="margin-top:24px">
-        <li><a href="https://www.linkedin.com/in/yourname" target="_blank" rel="noopener">LinkedIn <span>↗</span></a></li>
-        <li><a href="https://github.com/yourname" target="_blank" rel="noopener">GitHub <span>↗</span></a></li>
-        <li><a href="https://scholar.google.com/" target="_blank" rel="noopener">Google Scholar <span>↗</span></a></li>
-      </ul>
-    </div>
-
-    <form class="card" id="form" novalidate>
-      <span class="tag">Write a message</span>
-      <label>Your name<input name="name" autocomplete="name" required></label>
-      <label>Subject<input name="subject" required></label>
-      <label>Message<textarea name="message" required></textarea></label>
-      <button class="btn" type="submit" style="justify-self:start">Open in my email app →</button>
-      <p class="hint">This opens your own email client with the message filled in.</p>
-      <p class="status" id="status" role="status"></p>
-    </form>
+  <div class="card coffee">
+    <span class="tag">Where I am</span>
+    <p>I’m currently based in <strong>Lausanne</strong>, and my hometown is <strong>Paris</strong>. If you’re around either city, let’s grab a coffee ☕</p>
   </div>
 </main>
 
@@ -64,30 +63,13 @@
 </footer>
 
 <script>
-const EMAIL = 'you@example.com';
 document.querySelector('.yr').textContent = new Date().getFullYear();
 
-const copy = document.getElementById('copy');
-copy.addEventListener('click', async () => {
-  try { await navigator.clipboard.writeText(EMAIL); copy.textContent = 'Copied ✓'; }
-  catch { copy.textContent = EMAIL; }
-  setTimeout(() => copy.textContent = 'Copy email', 2000);
-});
-
-const form = document.getElementById('form'), status = document.getElementById('status');
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  const d = Object.fromEntries(new FormData(form));
-  const missing = ['name', 'subject', 'message'].filter(k => !d[k].trim());
-  if (missing.length) {
-    status.textContent = 'Please fill in every field.';
-    form.elements[missing[0]].focus();
-    return;
-  }
-  const body = `${d.message.trim()}\n\n— ${d.name.trim()}`;
-  location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(d.subject.trim())}&body=${encodeURIComponent(body)}`;
-  status.textContent = 'Opening your email app…';
-});
+document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copied ✓'; }
+  catch { b.textContent = 'Select & copy'; }
+  setTimeout(() => b.textContent = 'Copy', 1800);
+}));
 </script>
 </body>
 </html>

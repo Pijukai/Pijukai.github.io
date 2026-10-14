@@ -20,8 +20,8 @@
       <li><a href="projects.html">Projects</a></li>
       <li><a href="publications.html" aria-current="page">Publication</a></li>
       <li><a href="resume.html">Resume</a></li>
-      <li><a href="contact.html">Contact Me</a></li>
       <li><a href="about.html">About Me</a></li>
+      <li><a class="cta" href="contact.html">Contact Me</a></li>
     </ul>
   </nav>
 </header>
@@ -30,51 +30,37 @@
   <div class="page-head">
     <span class="eyebrow">Publication</span>
     <h1>Papers &amp; preprints</h1>
-    <p class="intro">Also on <a href="https://scholar.google.com/" target="_blank" rel="noopener">Google Scholar ↗</a></p>
+    <p class="intro">Peer-reviewed papers and workshop contributions. Also on <a href="https://scholar.google.com/" target="_blank" rel="noopener">Google Scholar ↗</a></p>
   </div>
 
-  <!-- ✏️ Group by year. Put your own name inside <strong> so it stands out in the author list.
-       The BibTeX inside <pre> is what the "BibTeX" button shows and copies. -->
-  <h2 class="year">2026</h2>
-  <ol class="pubs">
-    <li class="pub card">
-      <h3>Title of your paper goes here</h3>
-      <p class="authors"><strong>Julien Barozet-Golbery</strong>, Co-author One, Co-author Two</p>
-      <p class="venue">Workshop or conference name, 2026</p>
-      <div class="actions">
-        <a class="btn ghost sm" href="#">PDF ↗</a>
-        <a class="btn ghost sm" href="#">arXiv ↗</a>
-        <a class="btn ghost sm" href="#">Code ↗</a>
-        <button class="btn ghost sm" type="button" data-bib aria-expanded="false">BibTeX</button>
-      </div>
-      <div class="bib">
-<pre>@inproceedings{barozetgolbery2026title,
-  title     = {Title of your paper goes here},
-  author    = {Barozet-Golbery, Julien and One, Co-author and Two, Co-author},
-  booktitle = {Workshop or conference name},
+  <!-- ✏️ One <li class="project pub card"> per paper, in the order written here: add new papers at the top.
+       Citation order: authors, title, venue, year. Put your own name inside <strong>.
+       The BibTeX inside <pre> is what the "BibTeX" button shows and copies.
+       Picture: replace <div class="thumb" aria-hidden="true"></div> with
+         <div class="thumb"><img src="assets/publications/my-paper.jpg" alt="Main figure of the paper"></div> -->
+  <ol class="projects">
+    <li class="project pub card">
+      <div class="thumb" aria-hidden="true"></div>
+      <div class="body">
+        <div class="meta"><p class="tag">Workshop paper</p><span class="date">2026</span></div>
+        <p class="authors">L. J. Vasseur, R. Gautam, M. Gfeller, <strong>J. Barozet-Golbery</strong>, R. Schlama, P. Schwaller.</p>
+        <h3>TAG-X: Joint Multispectral Representations for Molecular Structure Elucidation.</h3>
+        <p class="venue">In <em>NeurIPS 2026 Workshop on Machine Learning for Molecules (ML4Molecules)</em>, 2026.</p>
+        <div class="actions">
+          <!-- ✏️ Add when available:
+          <a class="btn ghost sm" href="…">PDF ↗</a>
+          <a class="btn ghost sm" href="…">arXiv ↗</a>
+          <a class="btn ghost sm" href="…">Code ↗</a> -->
+          <button class="btn ghost sm" type="button" data-bib aria-expanded="false">BibTeX</button>
+        </div>
+        <div class="bib">
+<pre>@inproceedings{vasseur2026tagx,
+  title     = {{TAG-X}: Joint Multispectral Representations for Molecular Structure Elucidation},
+  author    = {Vasseur, L. J. and Gautam, R. and Gfeller, M. and Barozet-Golbery, J. and Schlama, R. and Schwaller, P.},
+  booktitle = {NeurIPS 2026 Workshop on Machine Learning for Molecules (ML4Molecules)},
   year      = {2026}
 }</pre>
-      </div>
-    </li>
-  </ol>
-
-  <h2 class="year">2025</h2>
-  <ol class="pubs">
-    <li class="pub card">
-      <h3>Another paper or preprint title</h3>
-      <p class="authors">Co-author One, <strong>Julien Barozet-Golbery</strong></p>
-      <p class="venue">arXiv preprint, 2025</p>
-      <div class="actions">
-        <a class="btn ghost sm" href="#">arXiv ↗</a>
-        <button class="btn ghost sm" type="button" data-bib aria-expanded="false">BibTeX</button>
-      </div>
-      <div class="bib">
-<pre>@article{barozetgolbery2025another,
-  title   = {Another paper or preprint title},
-  author  = {One, Co-author and Barozet-Golbery, Julien},
-  journal = {arXiv preprint},
-  year    = {2025}
-}</pre>
+        </div>
       </div>
     </li>
   </ol>
@@ -89,7 +75,7 @@ document.querySelector('.yr').textContent = new Date().getFullYear();
 
 /* BibTeX: toggle the block, and add a Copy button inside it. */
 document.querySelectorAll('[data-bib]').forEach(btn => {
-  const box = btn.closest('.pub').querySelector('.bib');
+  const box = btn.closest('li').querySelector('.bib');
   const copy = document.createElement('button');
   copy.type = 'button'; copy.className = 'btn sm'; copy.textContent = 'Copy';
   copy.addEventListener('click', async () => {

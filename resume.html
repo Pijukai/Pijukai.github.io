@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Resume — Julien Barozet-Golbery</title>
-<meta name="description" content="Education, experience and skills of Julien Barozet-Golbery.">
+<meta name="description" content="Resume of Julien Barozet-Golbery — M.Sc. Computer Science student at EPFL working on world models and generative AI.">
 <meta name="theme-color" content="#16141d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,22 +20,28 @@
       <li><a href="projects.html">Projects</a></li>
       <li><a href="publications.html">Publication</a></li>
       <li><a href="resume.html" aria-current="page">Resume</a></li>
-      <li><a href="contact.html">Contact Me</a></li>
       <li><a href="about.html">About Me</a></li>
+      <li><a class="cta" href="contact.html">Contact Me</a></li>
     </ul>
   </nav>
 </header>
 
 <main id="main">
   <div class="page-head resume-head">
-    <div>
+    <!-- ✏️ The photo is assets/photo.jpeg (same file as the frame on the home page). Initials show until it exists. -->
+    <div class="avatar"><span aria-hidden="true">JB</span><img src="assets/photo.jpeg" alt="Portrait of Julien Barozet-Golbery" onerror="this.remove()"></div>
+    <div class="resume-id">
       <span class="eyebrow">Resume</span>
       <h1>Julien Barozet-Golbery</h1>
-      <p class="intro">Master’s student · Machine learning research</p>
+      <p class="intro">M.Sc. student in Computer Science (AI &amp; Data Science) at EPFL · World models for Physical AI and Generative AI</p>
+      <p class="contact-line">Lausanne, CH · Paris, FR ·
+        <a href="mailto:julienbarozet@gmail.com">julienbarozet@gmail.com</a> ·
+        <a href="https://github.com/Pijukai" target="_blank" rel="noopener">github.com/Pijukai</a> ·
+        <a href="https://www.linkedin.com/in/julienbarozet" target="_blank" rel="noopener">linkedin.com/in/julienbarozet</a></p>
     </div>
     <div class="actions no-print">
-      <!-- ✏️ Put resume.pdf in the repo root -->
-      <a class="btn" href="resume.pdf" target="_blank" rel="noopener">Download PDF ↓</a>
+      <!-- ✏️ The PDF is served from resume.pdf in the repo root -->
+      <a class="btn" href="resume.pdf" download="Julien_Barozet-Golbery_CV.pdf">Download PDF ↓</a>
       <button class="btn ghost" type="button" onclick="print()">Print</button>
     </div>
   </div>
@@ -44,12 +50,12 @@
     <h2 id="edu">Education</h2>
     <ul class="entries">
       <li class="entry">
-        <span class="when">2025 — 2027</span>
-        <div><h3>M.Sc. in …</h3><p class="org">University</p></div>
+        <span class="when">Sep 2025 — Feb 2028<br>(expected)</span>
+        <div><h3>M.Sc. in Computer Science, specialized in AI and Data Science</h3><p class="org">EPFL · GPA 5.45/6</p></div>
       </li>
       <li class="entry">
-        <span class="when">2022 — 2025</span>
-        <div><h3>B.Sc. in …</h3><p class="org">University</p></div>
+        <span class="when">Sep 2022 — Jul 2025</span>
+        <div><h3>B.Sc. in Computer Science</h3><p class="org">EPFL</p></div>
       </li>
     </ul>
   </section>
@@ -58,34 +64,77 @@
     <h2 id="exp">Experience</h2>
     <ul class="entries">
       <li class="entry">
-        <span class="when">2025 — now</span>
+        <span class="when">Sep 2025 — Present</span>
         <div>
-          <h3>Research Assistant</h3><p class="org">Lab name</p>
-          <ul><li>What you worked on, in one line.</li><li>A result or outcome you’re proud of.</li></ul>
+          <h3>Research Track Lead + Project Lead</h3><p class="org">EPFL AI Team</p>
+          <ul>
+            <li>Led a diverse team of 50+ researchers (undergraduates, graduates and PhDs) and engineers across 10+ interdisciplinary projects, with partnerships with CERN and EPFL labs (NeuroAI, LIAC).</li>
+            <li>Mentored and advised project teams, managed hiring, supervised progress to keep projects on track, pitched our expertise to prospective partners and translated their research gaps into concrete project outlines and roadmaps.</li>
+          </ul>
         </div>
       </li>
       <li class="entry">
-        <span class="when">2024 — 2025</span>
-        <div><h3>Teaching Assistant</h3><p class="org">Course</p></div>
+        <span class="when">Jul 2025 — Aug 2025</span>
+        <div>
+          <h3>Machine Learning Engineer Intern</h3><p class="org">VikitAI</p>
+          <ul>
+            <li>Developed a Python-based AI agent backend using LangChain, exposed as a REST API with FastAPI and deployed to Google Cloud Platform via Docker.</li>
+            <li>Built a React.js web application with Stripe-based credit system integration, drastically reducing process execution time.</li>
+          </ul>
+        </div>
       </li>
       <li class="entry">
-        <span class="when">2024</span>
-        <div><h3>ML Intern</h3><p class="org">Company</p></div>
+        <span class="when">Sep 2024 — Jul 2026</span>
+        <div>
+          <h3>Teaching Assistant</h3><p class="org">EPFL · Introduction to Machine Learning, Analysis I, Linear Algebra</p>
+          <ul>
+            <li>Supported 150+ students through grading, tutoring and exercise sessions, helping them build conceptual understanding and improve their academic performance.</li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="research">
+    <h2 id="research">Research</h2>
+    <ul class="entries">
+      <li class="entry">
+        <span class="when">2026</span>
+        <div><h3>TAG-X: Joint Multispectral Representations for Molecular Structure Elucidation</h3><p class="org">NeurIPS 2026 ML4Molecules Workshop · <a href="publications.html">Publication →</a></p></div>
+      </li>
+      <li class="entry">
+        <span class="when">Sep 2025 — Present</span>
+        <div><h3>5 research projects</h3><p class="org">With EPFL NeuroAI, VITA and LASTRO labs, CERN and NVIDIA · <a href="projects.html">Projects →</a></p></div>
       </li>
     </ul>
   </section>
 
   <section aria-labelledby="skills">
     <h2 id="skills">Skills</h2>
-    <ul class="chips">
-      <li>Python</li><li>PyTorch</li><li>Deep learning</li><li>Statistics</li>
-      <li>Linear algebra</li><li>Experiment design</li><li>LaTeX</li>
-    </ul>
+    <dl class="skills">
+      <dt>Programming languages</dt>
+      <dd><ul class="chips"><li>Python</li><li>C</li><li>Scala</li><li>Kotlin</li><li>Java</li><li>VHDL</li><li>Assembly</li><li>SQL</li></ul></dd>
+      <dt>Engineering / DevOps</dt>
+      <dd><ul class="chips"><li>Linux</li><li>Git</li><li>Docker</li><li>SLURM (multi-GPU HPC)</li></ul></dd>
+      <dt>Machine learning / Data</dt>
+      <dd><ul class="chips"><li>PyTorch</li><li>scikit-learn</li><li>Matplotlib</li><li>Seaborn</li><li>Pandas</li><li>NumPy</li><li>LangChain</li></ul></dd>
+    </dl>
   </section>
 
   <section aria-labelledby="lang">
     <h2 id="lang">Languages</h2>
-    <ul class="chips"><li>Language — level</li><li>Language — level</li></ul>
+    <ul class="chips"><li>French — native</li><li>English — C1</li></ul>
+  </section>
+
+  <section class="card pdf-box no-print" aria-labelledby="pdf">
+    <div>
+      <h2 id="pdf">Prefer a PDF?</h2>
+      <p class="muted">The same resume as a one-page document.</p>
+    </div>
+    <div class="actions">
+      <a class="btn" href="resume.pdf" download="Julien_Barozet-Golbery_CV.pdf">Download PDF ↓</a>
+      <a class="btn ghost" href="resume.pdf" target="_blank" rel="noopener">Open in a new tab ↗</a>
+    </div>
   </section>
 </main>
 
