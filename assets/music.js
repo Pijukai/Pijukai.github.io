@@ -73,8 +73,9 @@
     try {
       if (ctx) await ctx.resume();
       await music.play();
-      await rain[r].play();
-    } catch { return false; }
+    } catch { waiting(true); return false; }
+    rain[r].play().catch(() => {});                    // the rain is a bonus: never let it block the music
+    waiting(false);
     const first = !session('musicStarted'); session('musicStarted', 1);
     fadeTo(1, first ? 2500 : 700);                     // long fade the first time, quick when changing page
     return true;
@@ -90,18 +91,29 @@
   const listen = () => EVENTS.forEach(t => addEventListener(t, kick, true));
   const unlisten = () => EVENTS.forEach(t => removeEventListener(t, kick, true));
 
-  const btn = document.getElementById('music');
-  const show = () => {
+  // The mute button. With in-place page changes (router.js) each page brings a new button, so re-attach on "page:enter".
+  let btn = null, isWaiting = false;
+  function paint() {
     if (!btn) return;
     btn.setAttribute('aria-pressed', on);
     btn.title = on ? 'Mute music and rain' : 'Play music and rain';
-  };
-  if (btn) btn.addEventListener('click', async () => {
-    on = !on; local('music', on ? 'on' : 'off'); show();
+    btn.classList.toggle('waiting', isWaiting && on);    // on, but the browser still waits for a first click
+    btn.dataset.hint = matchMedia('(pointer:coarse)').matches ? 'Tap for sound' : 'Click for sound';
+  }
+  function waiting(w) { isWaiting = w; paint(); }
+  async function toggle() {
+    if (on && music.paused) { if (await play(true)) unlisten(); return; }   // blocked until now: this click starts it
+    on = !on; local('music', on ? 'on' : 'off'); paint();
     if (on) { [music, ...rain].forEach(a => a.preload = 'auto'); if (!(await play(true))) listen(); }
-    else { unlisten(); fadeTo(0, 500); }
-  });
-  show();
+    else { unlisten(); waiting(false); fadeTo(0, 500); }
+  }
+  function bind() {
+    btn = document.getElementById('music');
+    if (btn && !btn._bound) { btn._bound = true; btn.addEventListener('click', toggle); }
+    paint();
+  }
+  document.addEventListener('page:enter', bind);
+  bind();
 
   const resume = () => { if (on) play(false).then(ok => { if (!ok) listen(); }); };
   // coming back with the Back button: pick up wherever another page left off

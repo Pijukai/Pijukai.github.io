@@ -168,6 +168,10 @@ body.lamp-off .mote{display:none}
 .music svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .music .spk{fill:currentColor}
 .music[aria-pressed=true] .off,.music[aria-pressed=false] .on{display:none}
+.music.waiting{animation:soundpulse 1.8s ease-in-out infinite}
+.music.waiting::after{content:attr(data-hint);position:absolute;right:calc(100% + 10px);top:50%;transform:translateY(-50%);white-space:nowrap;pointer-events:none;
+  padding:5px 10px;border-radius:999px;font:500 12px/1.2 'DM Sans',sans-serif;color:#f6efe6;background:rgba(15,10,30,.7);border:1px solid rgba(255,255,255,.14)}
+@keyframes soundpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,179,107,.45)}50%{box-shadow:0 0 0 7px rgba(255,179,107,0)}}
 
 @media (max-width:760px){
   .music{top:12px;right:12px;width:34px;height:34px}
@@ -451,6 +455,12 @@ body.lamp-off .mote{display:none}
 
 
 <script>
+{ // own scope, so the page can run again when revisited without a reload (see assets/router.js)
+let alive = true;
+const leaving = new AbortController();
+document.addEventListener('page:leave', () => {          // stop everything when another page is swapped in
+  alive = false; leaving.abort(); ro.disconnect(); clearInterval(clock);
+}, { once: true });
 /* =========================================================
    ✏️  EDIT YOUR INFO HERE — everything on the site comes from this
    ========================================================= */
@@ -463,7 +473,7 @@ const CONFIG = {
 const $ = s => document.querySelector(s);
 const root = document.documentElement;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+const sleep = ms => new Promise((ok, stop) => setTimeout(() => alive ? ok() : stop('left'), ms));
 const rand = (a, b) => a + Math.random() * (b - a);
 
 /* ---------- fill content ---------- */
@@ -484,6 +494,7 @@ const HALF = 462, FRONT = 520 - 404, TOP = 520 - 17;
 const isMobile = matchMedia('(max-width:760px)');
 const LEFT_TOP = 182;   // highest point of the left-hand objects (lamp shade), stage units
 function layout() {
+  if (!alive) return;
   const W = innerWidth, H = innerHeight, mobile = isMobile.matches;
   const nav = $('#nav').getBoundingClientRect();
   const heroBottom = $('.hero').getBoundingClientRect().bottom;
@@ -604,8 +615,8 @@ function resize() {
   for (const [c, x] of [[cityC, cctx], [rainC, rctx]]) { c.width = W * dpr; c.height = H * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0); }
   drawCity(); initRain(); buildLights();
 }
-new ResizeObserver(resize).observe(win);
-addEventListener('resize', layout);
+const ro = new ResizeObserver(resize); ro.observe(win);
+addEventListener('resize', layout, { signal: leaving.signal });
 
 function frame(t) {
   rctx.clearRect(0, 0, W, H);
@@ -636,11 +647,12 @@ function frame(t) {
   }
   rctx.shadowBlur = 0;
   if (flash > .01) { rctx.fillStyle = `rgba(225,228,255,${flash * .55})`; rctx.fillRect(0, 0, W, H); flash *= .88; }
-  requestAnimationFrame(frame);
+  if (alive) requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
 
 function lightning() {
+  if (!alive) return;
   if (!document.hidden) {
     flash = 1; setTimeout(() => flash = .8, 140);
   }
@@ -688,14 +700,14 @@ $('#cat').addEventListener('click', e => {
 
 /* ---------- screen: clock + typing ---------- */
 const tick = () => $('#clock').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-tick(); setInterval(tick, 15000);
+tick(); const clock = setInterval(tick, 15000);
 
-/* the code that gets typed on the monitor (line 4 is the hidden hello) */
+/* the code that gets typed on the monitor (line 4 is the welcome message) */
 const CODE = [
   'import torch',
   'import torch.nn as nn',
   '',
-  '# hello, visitor 👋  enjoy your visit',
+  '# Welcome, visitor! Enjoy your visit!',
   '',
   'class TinyNet(nn.Module):',
   '    def __init__(self, d=128):',
@@ -727,7 +739,7 @@ function hl(line) {
 }
 const codeEl = $('#code'), termEl = $('#term');
 codeEl.innerHTML = CODE.map((l, i) =>
-  `<div class="ln${l.includes('hello') ? ' hello' : ''}"><b>${i + 1}</b><span></span></div>`).join('');
+  `<div class="ln${l.includes('Welcome') ? ' hello' : ''}"><b>${i + 1}</b><span></span></div>`).join('');
 const rows = [...codeEl.querySelectorAll('.ln')];
 
 function termLine(html, cls = '') {
@@ -773,16 +785,13 @@ async function trainLoop() {
       await sleep(reduce ? 50 : rand(650, 950));
     }
     termLine(`<span class="ok">✓ done</span> · acc ${(97.4 + rand(0, 1)).toFixed(1)}%`);
-    await sleep(900);
-    termLine('hello, visitor 👋', 'hey');
-    await sleep(500);
-    termLine('enjoy your visit ✨', 'hey');
-    await sleep(9000);
+    await sleep(9900);
   }
 }
-setTimeout(async () => { await typeCode(); trainLoop(); }, 500);
-
+setTimeout(() => typeCode().then(trainLoop).catch(() => {}), 500);
+}
 </script>
 <script src="assets/music.js"></script>
+<script src="assets/router.js"></script>
 </body>
 </html>

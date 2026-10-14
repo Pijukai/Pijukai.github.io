@@ -37,8 +37,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .mute svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .mute .spk{fill:currentColor}
 .mute[aria-pressed=true] .off,.mute[aria-pressed=false] .on{display:none}
+.mute{position:relative}
+.mute.waiting{animation:soundpulse 1.8s ease-in-out infinite}
+.mute.waiting::after{content:attr(data-hint);position:absolute;right:0;top:calc(100% + 8px);white-space:nowrap;pointer-events:none;
+  padding:5px 10px;border-radius:999px;font:500 12px/1.2 'DM Sans',sans-serif;color:#f6efe6;background:rgba(15,10,30,.7);border:1px solid rgba(255,255,255,.14)}
+@keyframes soundpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,179,107,.45)}50%{box-shadow:0 0 0 7px rgba(255,179,107,0)}}
 
 /* ---------- page ---------- */
+main:focus{outline:none}
 main{flex:1;width:100%;max-width:var(--max);margin:0 auto;padding:56px 24px 80px}
 .page-head{margin-bottom:40px}
 .eyebrow{font:500 12px/1 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
