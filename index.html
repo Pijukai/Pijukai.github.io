@@ -93,6 +93,8 @@ body.lamp-off .mote{display:none}
 @keyframes tail{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(12deg)}}
 .catbody{transform-box:fill-box;transform-origin:50% 100%;animation:breathe 4s ease-in-out infinite}
 @keyframes breathe{50%{transform:scaleY(1.05)}}
+.spike{transform-box:view-box;transform-origin:902px 292px;animation:dsway 6s ease-in-out infinite alternate}
+@keyframes dsway{0%{transform:rotate(-1.2deg)}100%{transform:rotate(1.6deg)}}
 .z{font:600 13px 'DM Sans';fill:#e9e1ff;opacity:0;animation:zz 4.5s ease-in-out infinite}
 .z:nth-of-type(2){animation-delay:1.5s;font-size:10px}.z:nth-of-type(3){animation-delay:3s;font-size:8px}
 @keyframes zz{0%{opacity:0;transform:translate(0,0)}25%{opacity:.85}100%{opacity:0;transform:translate(-10px,-26px)}}
@@ -101,19 +103,9 @@ body.lamp-off .mote{display:none}
 .steam{fill:none;stroke:rgba(255,255,255,.4);stroke-width:2.2;stroke-linecap:round;opacity:0;animation:steam 3.4s ease-in-out infinite}
 .steam:nth-of-type(2){animation-delay:1.1s}.steam:nth-of-type(3){animation-delay:2.2s}
 @keyframes steam{0%{opacity:0;transform:translateY(4px)}40%{opacity:.6}100%{opacity:0;transform:translateY(-22px)}}
-#dog{cursor:pointer}
-.dogbody{transform-box:fill-box;transform-origin:50% 100%;animation:breathe 4.4s ease-in-out infinite}
-.doghead{transform-box:fill-box;transform-origin:50% 90%;animation:headtilt 8s ease-in-out infinite}
-@keyframes headtilt{0%,40%,100%{transform:rotate(0)}55%,75%{transform:rotate(-5deg)}}
-.ear.r{transform-box:fill-box;transform-origin:0% 100%;animation:earflick 6s ease-in-out infinite}
-@keyframes earflick{0%,88%,100%{transform:rotate(0)}91%{transform:rotate(12deg)}94%{transform:rotate(-2deg)}}
-.dogeyes{transform-box:fill-box;transform-origin:50% 50%;animation:dogblink 5s infinite}
-@keyframes dogblink{0%,95%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
-.woof{font:italic 16px 'Instrument Serif';fill:#ffe3b8;opacity:0;transition:opacity .3s}
-#dog.talk .woof{opacity:1}
 
 /* ---------- MONITOR SCREEN ---------- */
-.screen{position:absolute;left:292px;top:60px;width:416px;height:232px;border-radius:6px;overflow:hidden;pointer-events:none;user-select:none;
+.screen{position:absolute;left:292px;top:60px;width:416px;height:232px;transform:scale(1.1);transform-origin:208px 296px;border-radius:6px;overflow:hidden;pointer-events:none;user-select:none;
   background:#17142b;color:#d9d4f5;font-family:'JetBrains Mono',ui-monospace,monospace;
   box-shadow:0 0 50px rgba(143,211,255,.3),0 0 0 1px rgba(0,0,0,.3)}
 .screen::after{content:"";position:absolute;inset:0;pointer-events:none;
@@ -162,7 +154,22 @@ body.lamp-off .mote{display:none}
 .nav a:focus-visible{outline:2px solid var(--accent2);outline-offset:4px;border-radius:8px}
 
 
+/* ---------- MUSIC TOGGLE ---------- */
+.music{position:fixed;top:calc(3vh + 22px);right:calc(3vw + 22px);z-index:22;display:flex;align-items:center;gap:8px;padding:7px 13px 7px 11px;border-radius:999px;
+  background:rgba(15,10,30,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);
+  font:500 13px 'DM Sans',sans-serif;color:rgba(246,239,230,.75);transition:color .2s,background .2s,border-color .2s}
+.music:hover{color:#fff;background:rgba(15,10,30,.65)}
+.music[aria-pressed=true]{color:#fff;border-color:rgba(255,179,107,.45)}
+.music:focus-visible{outline:2px solid var(--accent2);outline-offset:3px}
+.eq{display:flex;align-items:flex-end;gap:2px;height:12px}
+.eq i{width:2.5px;height:4px;border-radius:2px;background:currentColor;opacity:.8}
+.music[aria-pressed=true] .eq i{background:var(--accent);animation:eq 1.1s ease-in-out infinite alternate}
+.music[aria-pressed=true] .eq i:nth-child(2){animation-delay:-.4s;animation-duration:.9s}
+.music[aria-pressed=true] .eq i:nth-child(3){animation-delay:-.7s;animation-duration:1.3s}
+@keyframes eq{0%{height:3px}100%{height:12px}}
+
 @media (max-width:760px){
+  .music{top:12px;right:12px;padding:6px 11px 6px 9px;font-size:12px}
   .hero{top:8vh}
   .mist{opacity:.1}
   .nav{left:50%;bottom:10px;transform:translateX(-50%);flex-direction:row;flex-wrap:wrap;justify-content:center;width:max-content;max-width:calc(100vw - 24px);gap:2px;padding:5px;border-radius:22px;background:rgba(15,10,30,.6);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1)}
@@ -205,24 +212,27 @@ body.lamp-off .mote{display:none}
         <linearGradient id="bezel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d2650"/><stop offset=".08" stop-color="#231d42"/><stop offset="1" stop-color="#14112a"/></linearGradient>
         <linearGradient id="standG" x1="0" x2="1"><stop offset="0" stop-color="#1b1734"/><stop offset=".5" stop-color="#3a3266"/><stop offset="1" stop-color="#17132c"/></linearGradient>
         <linearGradient id="mugG" x1="0" x2="1"><stop offset="0" stop-color="#b55a44"/><stop offset=".28" stop-color="#f29c7e"/><stop offset=".45" stop-color="#e7876a"/><stop offset="1" stop-color="#8f4234"/></linearGradient>
-        <radialGradient id="dogG" cx=".38" cy=".3" r=".85"><stop offset="0" stop-color="#e2b88a"/><stop offset=".55" stop-color="#c4925f"/><stop offset="1" stop-color="#8a5c38"/></radialGradient>
-        <linearGradient id="dogLeg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c4925f"/><stop offset="1" stop-color="#a8774c"/></linearGradient>
         <linearGradient id="shadeG" x1="0" x2="1"><stop offset="0" stop-color="#f6bd7a"/><stop offset=".55" stop-color="#e39352"/><stop offset="1" stop-color="#a95f2c"/></linearGradient>
         <linearGradient id="armG" x1="0" x2="1"><stop offset="0" stop-color="#4c4180"/><stop offset="1" stop-color="#2a2349"/></linearGradient>
         <radialGradient id="catG" cx=".3" cy=".25" r=".9"><stop offset="0" stop-color="#3a3050"/><stop offset=".6" stop-color="#241d34"/><stop offset="1" stop-color="#15111f"/></radialGradient>
-        <linearGradient id="bookHi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></linearGradient>
         <linearGradient id="kbG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3263"/><stop offset="1" stop-color="#211b3c"/></linearGradient>
         <pattern id="keys" width="12" height="8" patternUnits="userSpaceOnUse"><rect x="1" y="1" width="10" height="6" rx="1.5" fill="#4a4079"/><rect x="1.5" y="1.2" width="9" height="1.2" rx=".6" fill="#6b5fa6" opacity=".6"/></pattern>
         <linearGradient id="frameG" x1="0" x2="1"><stop offset="0" stop-color="#5a3a28"/><stop offset=".3" stop-color="#8a5c3c"/><stop offset="1" stop-color="#3d2619"/></linearGradient>
         <linearGradient id="photoPh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4378"/><stop offset="1" stop-color="#7a5f8c"/></linearGradient>
         <clipPath id="photoClip"><rect x="-21" y="-64" width="42" height="52" rx="1"/></clipPath>
+        <radialGradient id="delA" cx=".4" cy=".35"><stop offset="0" stop-color="#9a88ff"/><stop offset="1" stop-color="#4a37c4"/></radialGradient>
+        <radialGradient id="delB" cx=".4" cy=".35"><stop offset="0" stop-color="#7a94ff"/><stop offset="1" stop-color="#2f3aa8"/></radialGradient>
+        <linearGradient id="vaseG" x1="0" x2="1"><stop offset="0" stop-color="#9c8b74"/><stop offset=".35" stop-color="#efe3cf"/><stop offset=".7" stop-color="#c9b89f"/><stop offset="1" stop-color="#7e6f5b"/></linearGradient>
+        <linearGradient id="dLeafG" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#2d5a3f"/><stop offset="1" stop-color="#5f9c72"/></linearGradient>
+        <linearGradient id="padG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f1fa"/><stop offset="1" stop-color="#bdb6d0"/></linearGradient>
+        <linearGradient id="xmG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a5884"/><stop offset=".5" stop-color="#2c3556"/><stop offset="1" stop-color="#1b2138"/></linearGradient>
         <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter>
         <filter id="coneBlur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter>
         <filter id="glowF" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2"/></filter>
       </defs>
 
       <ellipse cx="500" cy="190" rx="360" ry="200" fill="url(#wallGlow)"/>
-      <g transform="translate(45,0)">
+      <g transform="translate(40,0)">
       <ellipse class="lampglow" cx="190" cy="300" rx="270" ry="210" fill="url(#lampGlow)"/>
       <polygon class="cone" points="154,235 212,208 360,378 100,378" fill="url(#cone)"/>
       <ellipse class="lampglow" cx="225" cy="372" rx="140" ry="22" fill="url(#pool)"/>
@@ -230,34 +240,20 @@ body.lamp-off .mote{display:none}
 
       <!-- contact shadows -->
       <g fill="#07040f" opacity=".55" filter="url(#soft)">
-        <ellipse cx="100" cy="367" rx="46" ry="5"/>
-        <ellipse cx="150" cy="374" rx="34" ry="5"/>
-        <ellipse cx="263" cy="368" rx="52" ry="6"/>
-        <ellipse cx="500" cy="358" rx="84" ry="7"/>
+        <ellipse cx="92" cy="401" rx="52" ry="4"/>
+        <ellipse cx="145" cy="374" rx="34" ry="5"/>
+        <ellipse cx="234" cy="368" rx="52" ry="6"/>
+        <ellipse cx="332" cy="391" rx="62" ry="5"/>
+        <ellipse cx="500" cy="358" rx="92" ry="7"/>
         <ellipse cx="500" cy="394" rx="108" ry="5"/>
         <ellipse cx="622" cy="388" rx="14" ry="4"/>
-        <ellipse cx="792" cy="367" rx="84" ry="6"/>
-        <ellipse cx="709" cy="388" rx="26" ry="4"/>
-        <ellipse cx="915" cy="368" rx="40" ry="5"/>
+        <ellipse cx="804" cy="367" rx="56" ry="5"/>
+        <ellipse cx="902" cy="367" rx="30" ry="4"/>
+        <ellipse cx="727" cy="388" rx="26" ry="4"/>
       </g>
-
-      <!-- books + lamp (shifted toward the centre) -->
-      <g transform="translate(45,0)">
-      <rect x="18" y="352" width="76" height="13" rx="2" fill="#7d5ba6"/>
-      <rect x="24" y="340" width="66" height="12" rx="2" fill="#d9825b"/>
-      <rect x="14" y="328" width="80" height="12" rx="2" fill="#4f7fb8"/>
-      <rect x="18" y="352" width="76" height="13" rx="2" fill="url(#bookHi)"/>
-      <rect x="24" y="340" width="66" height="12" rx="2" fill="url(#bookHi)"/>
-      <rect x="14" y="328" width="80" height="12" rx="2" fill="url(#bookHi)"/>
-      <g fill="none" stroke-width="1.2">
-        <path d="M30,352v13M80,352v13" stroke="#5e4385"/>
-        <path d="M36,340v12M76,340v12" stroke="#b9653f"/>
-        <path d="M24,328v12M84,328v12" stroke="#3a6296"/>
-      </g>
-      <rect x="40" y="332" width="30" height="2" rx="1" fill="#f3e6c8" opacity=".7"/>
-      <rect x="44" y="357" width="24" height="2" rx="1" fill="#f3e6c8" opacity=".55"/>
 
       <!-- lamp -->
+      <g transform="translate(40,0)">
       <g id="lampG" role="button" aria-label="Toggle lamp">
         <rect x="70" y="350" width="80" height="40" fill="transparent"/>
         <ellipse cx="105" cy="371" rx="36" ry="7" fill="#221c3d"/>
@@ -286,7 +282,7 @@ body.lamp-off .mote{display:none}
       </g>
 
       <!-- cat -->
-      <g id="cat" transform="translate(263,366)" role="button" aria-label="Sleeping cat">
+      <g id="cat" transform="translate(234,366)" role="button" aria-label="Sleeping cat">
         <path class="tail" d="M40,-4 C64,-6 72,-26 58,-36" stroke="#1d1729" stroke-width="9" fill="none" stroke-linecap="round"/>
         <ellipse class="catbody" cx="0" cy="-12" rx="46" ry="21" fill="url(#catG)"/>
         <path class="rim" d="M-30,-30 Q0,-40 34,-26" stroke="rgba(255,190,120,.5)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
@@ -303,7 +299,8 @@ body.lamp-off .mote{display:none}
         <text class="mrrp" x="-92" y="-44">mrrp?</text>
       </g>
 
-      <!-- monitor -->
+      <!-- monitor (×1.1 around the foot of the stand; the HTML .screen uses the same scale) -->
+      <g transform="translate(500,356) scale(1.1) translate(-500,-356)">
       <ellipse cx="500" cy="356" rx="82" ry="9" fill="url(#standG)"/>
       <ellipse cx="500" cy="353" rx="72" ry="5" fill="#3a3266" opacity=".5"/>
       <rect x="486" y="314" width="28" height="40" fill="url(#standG)"/>
@@ -311,15 +308,39 @@ body.lamp-off .mote{display:none}
       <path d="M294,49 H706" stroke="#6b5fb0" stroke-width="1" opacity=".55"/>
       <circle cx="500" cy="304" r="2.5" fill="#8fd3ff"/>
       <circle cx="500" cy="304" r="5" fill="#8fd3ff" opacity=".35" filter="url(#glowF)"/>
+      </g>
 
       <!-- desk items -->
       <ellipse cx="500" cy="380" rx="270" ry="30" fill="url(#screenLight)"/>
-      <g transform="rotate(-7 335 378)">
-        <rect x="300" y="369" width="72" height="24" rx="2" fill="#0a0614" opacity=".35" filter="url(#soft)"/>
-        <rect x="298" y="366" width="72" height="24" rx="2" fill="#efe4d3"/>
-        <rect x="298" y="366" width="5" height="24" fill="#c94f4f"/>
-        <line x1="308" y1="373" x2="356" y2="373" stroke="#c9b8a3"/><line x1="308" y1="379" x2="350" y2="379" stroke="#c9b8a3"/><line x1="308" y1="385" x2="340" y2="385" stroke="#c9b8a3"/>
-        <rect x="352" y="362" width="4" height="34" rx="2" fill="#f1c84b" transform="rotate(40 354 379)"/>
+      <!-- headphones (WH-1000XM5 style, Midnight Blue) lying on the desk -->
+      <g transform="translate(332,372) scale(.9,.45)">
+        <path d="M-48,-26 C-46,-72 46,-72 48,-26" stroke="#141a2e" stroke-width="9" fill="none" stroke-linecap="round" transform="translate(0,6)"/>
+        <path d="M-48,-26 C-46,-72 46,-72 48,-26" stroke="#2c3556" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M-40,-44 C-30,-64 30,-64 40,-44" stroke="#7d8cc0" stroke-width="1.6" fill="none" opacity=".55"/>
+        <path d="M-48,-26 L-49,-14 M48,-26 L49,-14" stroke="#9aa6cc" stroke-width="3" stroke-linecap="round"/>
+        <g>
+          <ellipse cx="-50" cy="16" rx="21" ry="30" fill="#141a2e"/>
+          <ellipse cx="50" cy="16" rx="21" ry="30" fill="#141a2e"/>
+          <ellipse cx="-50" cy="10" rx="21" ry="30" fill="url(#xmG)"/>
+          <ellipse cx="50" cy="10" rx="21" ry="30" fill="url(#xmG)"/>
+          <ellipse cx="-56" cy="-2" rx="7" ry="12" fill="#fff" opacity=".12"/>
+          <ellipse cx="44" cy="-2" rx="7" ry="12" fill="#fff" opacity=".12"/>
+          <circle cx="-50" cy="30" r="1.6" fill="#9aa6cc" opacity=".7"/><circle cx="50" cy="30" r="1.6" fill="#9aa6cc" opacity=".7"/>
+        </g>
+      </g>
+
+      <!-- game controller lying on the desk -->
+      <g transform="translate(92,376) scale(1,.55)">
+        <path d="M-36,-28 C-20,-34 20,-34 36,-28 C46,-24 52,-14 52,0 C54,16 58,30 50,36 C42,42 30,36 26,24 C20,14 -20,14 -26,24 C-30,36 -42,42 -50,36 C-58,30 -54,16 -52,0 C-52,-14 -46,-24 -36,-28 Z" fill="#6f6890" transform="translate(0,7)"/>
+        <path d="M-36,-28 C-20,-34 20,-34 36,-28 C46,-24 52,-14 52,0 C54,16 58,30 50,36 C42,42 30,36 26,24 C20,14 -20,14 -26,24 C-30,36 -42,42 -50,36 C-58,30 -54,16 -52,0 C-52,-14 -46,-24 -36,-28 Z" fill="url(#padG)"/>
+        <path d="M-24,-22 C-10,-26 10,-26 24,-22 L26,10 C14,8 -14,8 -26,10 Z" fill="#26223a"/>
+        <rect x="-16" y="-26" width="32" height="18" rx="3" fill="#322d4a"/>
+        <path d="M-17,-25 V-9 M17,-25 V-9" stroke="#6fb4ff" stroke-width="1.6" opacity=".9"/>
+        <circle cx="-15" cy="4" r="7" fill="#15121f"/><circle cx="-15" cy="3" r="4.5" fill="#3a3552"/>
+        <circle cx="15" cy="4" r="7" fill="#15121f"/><circle cx="15" cy="3" r="4.5" fill="#3a3552"/>
+        <path d="M-38,-12 h6 v-6 h4 v6 h6 v4 h-6 v6 h-4 v-6 h-6 z" fill="#4a4566"/>
+        <g fill="#4a4566"><circle cx="36" cy="-17" r="3"/><circle cx="36" cy="-3" r="3"/><circle cx="29" cy="-10" r="3"/><circle cx="43" cy="-10" r="3"/></g>
+        <circle cx="0" cy="12" r="2.4" fill="#4a4566"/>
       </g>
       <rect x="395" y="368" width="210" height="25" rx="5" fill="url(#kbG)" stroke="#4a4080"/>
       <rect x="400" y="371" width="200" height="19" fill="url(#keys)"/>
@@ -331,7 +352,7 @@ body.lamp-off .mote{display:none}
       </g>
 
       <!-- photo frame (souvenir) — the picture is assets/photo.jpeg -->
-      <g class="photoframe" transform="translate(787,366) scale(2.5)">
+      <g class="photoframe" transform="translate(800,366) scale(1.6)">
         <path d="M20,-30 L34,0" stroke="#2e1d13" stroke-width="4" stroke-linecap="round"/>
         <rect x="-30" y="-74" width="60" height="74" rx="3" fill="url(#frameG)"/>
         <path d="M-28,-73 H28" stroke="#c48a5e" stroke-width="1" opacity=".6"/>
@@ -348,7 +369,7 @@ body.lamp-off .mote{display:none}
       </g>
 
       <!-- mug (in front of the frame's lower corner) -->
-      <g transform="translate(-68,24)">
+      <g transform="translate(-50,24)">
       <path class="steam" d="M766,306 q-6,-8 0,-16 q6,-8 0,-16"/>
       <path class="steam" d="M776,308 q-6,-8 0,-16 q6,-8 0,-16"/>
       <path class="steam" d="M786,306 q-6,-8 0,-16 q6,-8 0,-16"/>
@@ -361,39 +382,19 @@ body.lamp-off .mote{display:none}
       <path d="M759,321 a18,4 0 0 0 36,0" stroke="#ffc2a8" stroke-width=".8" fill="none" opacity=".6"/>
       </g>
 
-      <!-- bulldog -->
-      <g id="dog" transform="translate(915,368)" role="button" aria-label="Bulldog">
-        <g class="dogbody">
-          <ellipse cx="0" cy="-26" rx="36" ry="27" fill="url(#dogG)"/>
-          <ellipse cx="0" cy="-30" rx="17" ry="22" fill="#efe0c8"/>
-          <rect x="-20" y="-30" width="13" height="29" rx="6" fill="url(#dogLeg)"/>
-          <rect x="7" y="-30" width="13" height="29" rx="6" fill="url(#dogLeg)"/>
-          <ellipse cx="-13" cy="-2" rx="9" ry="4" fill="#efe0c8"/>
-          <ellipse cx="13" cy="-2" rx="9" ry="4" fill="#efe0c8"/>
-          <path d="M-15,-4 v2.5 M-11,-4 v2.5 M11,-4 v2.5 M15,-4 v2.5" stroke="#b89a7a" stroke-width=".8"/>
-          <path d="M-20,-50 Q0,-41 20,-50" stroke="#6b5fd0" stroke-width="5" fill="none" stroke-linecap="round"/>
-          <circle cx="0" cy="-43" r="3.2" fill="#f1c84b"/>
-          <path d="M-35,-34 Q-37,-20 -30,-8" stroke="rgba(159,216,255,.35)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        </g>
-        <g class="doghead">
-          <g class="ear l"><path d="M-12,-89 Q-20,-112 -30,-115 Q-34,-95 -28,-77 Z" fill="#b5845a"/><path d="M-16,-88 Q-22,-106 -28,-109 Q-31,-94 -26,-80 Z" fill="#e3a4a0"/></g>
-          <g class="ear r"><path d="M12,-89 Q20,-112 30,-115 Q34,-95 28,-77 Z" fill="#b5845a"/><path d="M16,-88 Q22,-106 28,-109 Q31,-94 26,-80 Z" fill="#e3a4a0"/></g>
-          <ellipse cx="0" cy="-68" rx="30" ry="24" fill="url(#dogG)"/>
-          <ellipse cx="0" cy="-81" rx="3" ry="8" fill="#efe0c8" opacity=".8"/>
-          <path d="M-7,-86 q7,-3 14,0 M-5,-82 q5,-2 10,0" stroke="#8a6040" stroke-width="1" fill="none" opacity=".6"/>
-          <ellipse cx="0" cy="-59" rx="18" ry="12" fill="#3d2c28"/>
-          <ellipse cx="0" cy="-65" rx="6" ry="3.8" fill="#120c0e"/>
-          <ellipse cx="-2" cy="-66" rx="2" ry="1" fill="#fff" opacity=".4"/>
-          <path d="M0,-61 v4 M-9,-55 Q0,-50 9,-55" stroke="#120c0e" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-          <rect x="3" y="-56" width="2.4" height="2.6" rx=".6" fill="#f6efe6"/>
-          <g class="dogeyes">
-            <circle cx="-13" cy="-73" r="4.2" fill="#1a1215"/><circle cx="13" cy="-73" r="4.2" fill="#1a1215"/>
-            <circle cx="-11.8" cy="-74.4" r="1.3" fill="#fff"/><circle cx="14.2" cy="-74.4" r="1.3" fill="#fff"/>
-          </g>
-          <path d="M-28,-80 Q-32,-68 -26,-55" stroke="rgba(159,216,255,.4)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        </g>
-        <text class="woof" x="-58" y="-104">woof!</text>
+      <!-- delphinium in a vase (the florets along each stem are placed by script) -->
+      <g fill="url(#dLeafG)">
+        <path d="M896,294 q-22,-2 -40,-24 l6,-1 q-4,-8 -4,-14 q14,10 22,20 l2,-8 q8,14 14,27z"/>
+        <path d="M908,294 q22,-6 36,-30 l-6,0 q6,-8 7,-15 q-15,9 -22,19 l-2,-8 q-8,14 -13,34z"/>
+        <path d="M899,292 q-12,-18 -8,-44 l4,4 q3,-8 6,-12 q4,22 -2,52z"/>
+        <path d="M905,293 q18,0 30,-12 l-5,-2 q5,-4 7,-8 q-18,4 -32,22z"/>
+        <path d="M894,295 q-18,6 -30,2 q12,-8 30,-2z"/>
       </g>
+      <g id="delph"></g>
+      <path d="M886,292 C884,300 878,312 878,330 C878,352 886,366 902,366 C918,366 926,352 926,330 C926,312 920,300 918,292 Z" fill="url(#vaseG)"/>
+      <ellipse cx="902" cy="292" rx="16" ry="3.5" fill="#5e5242"/>
+      <path d="M884,316 C882,332 884,350 890,360" stroke="#fff" stroke-width="2" opacity=".3" fill="none" stroke-linecap="round"/>
+
     </svg>
 
     <div class="screen" id="screen" aria-hidden="true">
@@ -435,6 +436,10 @@ body.lamp-off .mote{display:none}
   <a href="contact.html">Contact Me</a>
 </nav>
 
+<button class="music" id="music" type="button" aria-pressed="false" title="Play quiet lofi music">
+  <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span id="musicLbl">lofi</span>
+</button>
+
 
 <script>
 /* =========================================================
@@ -464,9 +469,9 @@ $('#heroTag').textContent = CONFIG.tagline;
 
 
 /* ---------- layout / scaling ---------- */
-/* Desk objects span x 59–951 of the 1000-unit stage, centred on the monitor (x 500).
-   Their front edge is at y≈398 and the monitor top at y 48 (stage height 520). */
-const HALF = 456, FRONT = 520 - 398, TOP = 520 - 48;
+/* Desk objects span x 40–955 of the 1000-unit stage, centred on the monitor (x 500).
+   Their front edge is at y≈404 and the (scaled) monitor top at y≈17 (stage height 520). */
+const HALF = 462, FRONT = 520 - 404, TOP = 520 - 17;
 const isMobile = matchMedia('(max-width:760px)');
 function layout() {
   const W = innerWidth, H = innerHeight;
@@ -474,11 +479,15 @@ function layout() {
   const heroBottom = $('.hero').getBoundingClientRect().bottom;
   // width: on desktop keep clear of the section list on the left (and mirror that gap on the right)
   let s = isMobile.matches ? (W - 16) / (2 * HALF) : (W / 2 - nav.right - 32) / HALF;
-  s = Math.min(s, H * 0.7 / 520);
-  // on mobile the menu is a bar at the bottom: lift the objects above it
-  const liftFor = s => isMobile.matches ? Math.max(0, H - nav.top + 10 - FRONT * s) : 0;
-  // height: keep the monitor below the hero text
-  s = Math.max(.25, Math.min(s, (H - liftFor(s) - heroBottom - 16) / TOP));
+  s = Math.min(s, H * 0.8 / 520);
+  // mobile: the menu is a bar at the bottom, so lift the objects above it.
+  // desktop: lower the desk so only a strip of its front shows, giving the monitor more height.
+  const liftFor = s => isMobile.matches ? Math.max(0, H - nav.top + 10 - FRONT * s)
+                                        : -Math.max(0, FRONT * s - Math.max(48, H * .07));
+  // height: keep the monitor below the hero text, with breathing room
+  const gap = Math.max(32, H * .05);
+  const sw = s;
+  for (let i = 0; i < 3; i++) s = Math.max(.25, Math.min(sw, (H - liftFor(s) - heroBottom - gap) / TOP));
   const lift = liftFor(s);
   root.style.setProperty('--s', s);
   root.style.setProperty('--lift', lift + 'px');
@@ -625,13 +634,172 @@ function lightning() {
 }
 if (!reduce) setTimeout(lightning, rand(5000, 9000));
 
+/* ---------- delphinium: five-petal florets along three stems ---------- */
+{
+  // quadratic stems from the vase mouth: [x0,y0, cx,cy, x1,y1]
+  const STEMS = [[902,292, 898,120, 916,-100], [892,294, 868,190, 862,40], [912,294, 940,200, 948,96]];
+  let seed = 11; const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
+  const at = (s, t) => { const u = 1 - t; return [u*u*s[0] + 2*u*t*s[2] + t*t*s[4], u*u*s[1] + 2*u*t*s[3] + t*t*s[5]]; };
+  const floret = (x, y, r, fill) => {
+    let f = '', a0 = rnd() * 6.28;
+    for (let p = 0; p < 5; p++) {
+      const a = a0 + p * 1.2566;
+      f += `<circle cx="${(x + Math.cos(a) * r * .55).toFixed(1)}" cy="${(y + Math.sin(a) * r * .55).toFixed(1)}" r="${(r * .52).toFixed(1)}"/>`;
+    }
+    return `<g fill="url(#${fill})">${f}</g><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(r * .22).toFixed(1)}" fill="#efeaff" opacity=".85"/>`;
+  };
+  $('#delph').innerHTML = STEMS.map((s, i) => {
+    let g = `<path d="M${s[0]},${s[1]} Q${s[2]},${s[3]} ${s[4]},${s[5]}" stroke="#3f6b4e" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+    const n = i ? 18 : 26;
+    for (let k = 0; k < n; k++) {
+      const q = k / (n - 1), [x, y] = at(s, .4 + .6 * q), r = 10 - 6.5 * q;
+      if (q > .82) { g += `<ellipse cx="${x + (rnd() - .5) * 3}" cy="${y}" rx="${r * .55}" ry="${r * .85}" fill="#5b4cc8"/>`; continue; }  // buds at the tip
+      const side = k % 2 ? 1 : -1;
+      g += floret(x + side * r * (.55 + rnd() * .35), y + rnd() * 2, r, rnd() < .55 ? 'delA' : 'delB');
+      if (q < .55) g += floret(x - side * r * (.3 + rnd() * .3), y - r * .6, r * .85, rnd() < .5 ? 'delA' : 'delB');  // fuller lower spike
+    }
+    return `<g class="spike" style="animation-delay:${-i * 2.3}s">${g}</g>`;
+  }).join('');
+}
+
+/* ---------- lofi music: generated live with Web Audio (no audio file, off by default) ----------
+   Slow (72 bpm), mellow jazz chords on a soft electric piano, sine bass, brushed drums,
+   vinyl crackle and a little rain. Kept deliberately quiet. */
+const Lofi = (() => {
+  const VOLUME = .2, BPM = 72, SWING = .16;
+  const CHORDS = [  // [bass, voicing] in MIDI: Dm9 – G13 – Cmaj9 – Am9
+    [38, [53, 57, 60, 64]], [43, [53, 57, 59, 64]], [36, [52, 55, 59, 62]], [45, [55, 59, 60, 64]]];
+  const MELODY = [69, 72, 74, 76, 79, 81];   // C-major pentatonic, upper register
+  const hz = m => 440 * 2 ** ((m - 69) / 12);
+  let ctx, master, keys, drums, wobble, timer, step = 0, next = 0, lastMel = 0;
+
+  function noiseBuffer(sec, fill) {
+    const b = ctx.createBuffer(1, ctx.sampleRate * sec, ctx.sampleRate), d = b.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = fill(i, d.length);
+    return b;
+  }
+  function loop(buf, ...chain) {
+    const src = ctx.createBufferSource(); src.buffer = buf; src.loop = true;
+    chain.reduce((a, n) => (a.connect(n), n), src); src.start();
+  }
+  function setup() {
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    master = ctx.createGain(); master.gain.value = 0;
+    const tone = ctx.createBiquadFilter(); tone.type = 'lowpass'; tone.frequency.value = 3200;   // muffled, lofi
+    const glue = ctx.createDynamicsCompressor(); glue.threshold.value = -20; glue.ratio.value = 3;
+    master.connect(tone).connect(glue).connect(ctx.destination);
+    // small room reverb from a decaying noise impulse
+    const verb = ctx.createConvolver(), wet = ctx.createGain(); wet.gain.value = .3;
+    verb.buffer = (() => { const b = ctx.createBuffer(2, ctx.sampleRate * 2.4, ctx.sampleRate);
+      for (let c = 0; c < 2; c++) { const d = b.getChannelData(c); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length) ** 3; } return b; })();
+    verb.connect(wet).connect(master);
+    keys = ctx.createBiquadFilter(); keys.type = 'lowpass'; keys.frequency.value = 1700;
+    keys.connect(master); keys.connect(verb);
+    drums = ctx.createGain(); drums.gain.value = .8; drums.connect(master);
+    // tape wobble on every keys note
+    const lfo = ctx.createOscillator(); lfo.frequency.value = .27; wobble = ctx.createGain(); wobble.gain.value = 7;
+    lfo.connect(wobble); lfo.start();
+    // vinyl crackle + hiss, and a soft rain bed
+    const crackle = ctx.createBiquadFilter(); crackle.type = 'highpass'; crackle.frequency.value = 900;
+    const cg = ctx.createGain(); cg.gain.value = .22;
+    loop(noiseBuffer(3, () => (Math.random() < .0006 ? (Math.random() - .5) : 0) + (Math.random() - .5) * .02), crackle, cg, master);
+    let last = 0;
+    const rain = ctx.createBiquadFilter(); rain.type = 'lowpass'; rain.frequency.value = 900;
+    const rg = ctx.createGain(); rg.gain.value = .35;
+    loop(noiseBuffer(4, () => (last = (last + .02 * (Math.random() * 2 - 1)) / 1.02) * 3), rain, rg, master);
+  }
+
+  function ep(t, m, vel, dur) {                       // soft electric piano
+    const g = ctx.createGain(), o1 = ctx.createOscillator(), o2 = ctx.createOscillator(), g2 = ctx.createGain();
+    o1.frequency.value = hz(m); o2.type = 'triangle'; o2.frequency.value = hz(m) * 2; o2.detune.value = 5; g2.gain.value = .1;
+    wobble.connect(o1.detune); wobble.connect(o2.detune);
+    o1.connect(g); o2.connect(g2).connect(g); g.connect(keys);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vel, t + .02);
+    g.gain.exponentialRampToValueAtTime(vel * .35, t + .5); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o1.start(t); o2.start(t); o1.stop(t + dur + .05); o2.stop(t + dur + .05);
+  }
+  function bass(t, m, dur) {
+    const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = hz(m);
+    o.connect(g).connect(master);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.32, t + .03); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.start(t); o.stop(t + dur + .05);
+  }
+  const noise = (() => { let b; return () => b || (b = noiseBuffer(1, () => Math.random() * 2 - 1)); })();
+  function hit(t, type, freq, vel, dec) {             // brushed snare / hat
+    const src = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    src.buffer = noise(); f.type = type; f.frequency.value = freq; f.Q.value = .7;
+    src.connect(f).connect(g).connect(drums);
+    g.gain.setValueAtTime(vel, t); g.gain.exponentialRampToValueAtTime(.0001, t + dec);
+    src.start(t, Math.random() * .5); src.stop(t + dec + .02);
+  }
+  function kick(t, vel) {
+    const o = ctx.createOscillator(), g = ctx.createGain(); o.connect(g).connect(drums);
+    o.frequency.setValueAtTime(105, t); o.frequency.exponentialRampToValueAtTime(42, t + .14);
+    g.gain.setValueAtTime(vel, t); g.gain.exponentialRampToValueAtTime(.0001, t + .38);
+    o.start(t); o.stop(t + .4);
+  }
+
+  function play(i, t) {                               // i = eighth note within a 4-bar loop
+    const beat = 60 / BPM, bar = i >> 3, e = i % 8, [root, chord] = CHORDS[bar % 4];
+    if (e === 0) { chord.forEach((m, k) => ep(t + k * .022, m, .07, beat * 4.2)); bass(t, root, beat * 1.8); }
+    if (e === 4) bass(t, root + (Math.random() < .5 ? 7 : 0), beat * 1.4);
+    if (e === 5 && Math.random() < .55) chord.slice(1).forEach((m, k) => ep(t + k * .02, m, .035, beat * 2));
+    if (e === 0 || (e === 5 && Math.random() < .5)) kick(t, .42);
+    if (e === 2 || e === 6) hit(t, 'bandpass', 1600, .12, .2);
+    if (Math.random() < .85) hit(t, 'highpass', 7000, e % 2 ? .025 : .045, .05);
+    if (e % 2 === 0 && i - lastMel > 3 && Math.random() < .2) {       // sparse melody
+      lastMel = i; ep(t, MELODY[(Math.random() * MELODY.length) | 0], .045, beat * 2.5);
+    }
+  }
+  function schedule() {
+    const eighth = 30 / BPM;
+    while (next < ctx.currentTime + .3) {
+      play(step, next);
+      next += eighth * (step % 2 ? 1 - SWING : 1 + SWING);
+      step = (step + 1) % 32;
+    }
+  }
+
+  return {
+    playing: false,
+    async start() {
+      if (!ctx) setup();
+      await ctx.resume();
+      next = ctx.currentTime + .1;
+      clearInterval(timer); timer = setInterval(schedule, 60); schedule();
+      master.gain.cancelScheduledValues(ctx.currentTime);
+      master.gain.setValueAtTime(master.gain.value, ctx.currentTime);
+      master.gain.linearRampToValueAtTime(VOLUME, ctx.currentTime + 2.5);   // gentle fade in
+      this.playing = true;
+    },
+    stop() {
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      master.gain.cancelScheduledValues(now); master.gain.setValueAtTime(master.gain.value, now);
+      master.gain.linearRampToValueAtTime(0, now + 1.2);                     // fade out
+      clearInterval(timer);
+      setTimeout(() => { if (!this.playing) ctx.suspend(); }, 1300);
+      this.playing = false;
+    }
+  };
+})();
+{
+  const btn = $('#music'), lbl = $('#musicLbl');
+  btn.addEventListener('click', async () => {
+    if (Lofi.playing) Lofi.stop(); else await Lofi.start();
+    btn.setAttribute('aria-pressed', Lofi.playing);
+    btn.title = Lofi.playing ? 'Pause music' : 'Play quiet lofi music';
+    lbl.textContent = Lofi.playing ? 'lofi on' : 'lofi';
+  });
+}
+
 /* ---------- lamp + cat ---------- */
 function toggleLamp() {
   const off = document.body.classList.toggle('lamp-off');
   if (!off) { document.body.classList.add('lamp-on-anim'); setTimeout(() => document.body.classList.remove('lamp-on-anim'), 700); }
 }
 $('#lampG').addEventListener('click', toggleLamp);
-for (const id of ['#cat', '#dog']) $(id).addEventListener('click', e => {
+$('#cat').addEventListener('click', e => {
   const c = e.currentTarget; c.classList.add('talk'); setTimeout(() => c.classList.remove('talk'), 1600);
 });
 
