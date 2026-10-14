@@ -30,17 +30,12 @@
   <div class="page-head">
     <span class="eyebrow">Publication</span>
     <h1>Papers &amp; preprints</h1>
-    <p class="intro">Peer-reviewed papers and workshop contributions. Also on <a href="https://scholar.google.com/" target="_blank" rel="noopener">Google Scholar ↗</a></p>
   </div>
 
   <!-- ✏️ One <li class="project pub card"> per paper, in the order written here: add new papers at the top.
-       Citation order: authors, title, venue, year. Put your own name inside <strong>.
-       The BibTeX inside <pre> is what the "BibTeX" button shows and copies.
-       Picture: replace <div class="thumb" aria-hidden="true"></div> with
-         <div class="thumb"><img src="assets/publications/my-paper.jpg" alt="Main figure of the paper"></div> -->
+       Citation order: authors, title, venue, year. Put your own name inside <strong>. -->
   <ol class="projects">
     <li class="project pub card">
-      <div class="thumb" aria-hidden="true"></div>
       <div class="body">
         <div class="meta"><p class="tag">Workshop paper</p><span class="date">2026</span></div>
         <p class="authors">L. J. Vasseur, R. Gautam, M. Gfeller, <strong>J. Barozet-Golbery</strong>, R. Schlama, P. Schwaller.</p>
@@ -51,15 +46,6 @@
           <a class="btn ghost sm" href="…">PDF ↗</a>
           <a class="btn ghost sm" href="…">arXiv ↗</a>
           <a class="btn ghost sm" href="…">Code ↗</a> -->
-          <button class="btn ghost sm" type="button" data-bib aria-expanded="false">BibTeX</button>
-        </div>
-        <div class="bib">
-<pre>@inproceedings{vasseur2026tagx,
-  title     = {{TAG-X}: Joint Multispectral Representations for Molecular Structure Elucidation},
-  author    = {Vasseur, L. J. and Gautam, R. and Gfeller, M. and Barozet-Golbery, J. and Schlama, R. and Schwaller, P.},
-  booktitle = {NeurIPS 2026 Workshop on Machine Learning for Molecules (ML4Molecules)},
-  year      = {2026}
-}</pre>
         </div>
       </div>
     </li>
@@ -72,23 +58,6 @@
 
 <script>
 document.querySelector('.yr').textContent = new Date().getFullYear();
-
-/* BibTeX: toggle the block, and add a Copy button inside it. */
-document.querySelectorAll('[data-bib]').forEach(btn => {
-  const box = btn.closest('li').querySelector('.bib');
-  const copy = document.createElement('button');
-  copy.type = 'button'; copy.className = 'btn sm'; copy.textContent = 'Copy';
-  copy.addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(box.querySelector('pre').textContent.trim()); copy.textContent = 'Copied ✓'; }
-    catch { copy.textContent = 'Select & copy'; }
-    setTimeout(() => copy.textContent = 'Copy', 1800);
-  });
-  box.appendChild(copy);
-  btn.addEventListener('click', () => {
-    const open = box.classList.toggle('open');
-    btn.setAttribute('aria-expanded', open);
-  });
-});
 </script>
 </body>
 </html>

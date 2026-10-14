@@ -105,11 +105,9 @@ p+p{margin-top:12px}
 .pub .authors strong{color:var(--ink);font-weight:700}
 .pub .venue{color:var(--muted);font-size:15px}
 .pub .venue em{color:var(--ink)}
+.pub{grid-template-columns:1fr}  /* no picture column */
+.pub .actions:not(:has(*)){display:none}  /* no links yet: don't leave an empty row */
 .pub:hover{border-color:var(--line);background:var(--surface)}  /* not clickable: no hover state */
-.bib{display:none;margin-top:10px;position:relative}
-.bib.open{display:block}
-.bib pre{background:#13111a;border:1px solid var(--line);border-radius:8px;padding:14px 84px 14px 16px;overflow:auto;font:400 13px/1.55 'JetBrains Mono',ui-monospace,monospace;color:#cfc9dc}
-.bib .btn{position:absolute;top:8px;right:8px}
 
 /* resume timeline */
 .entries{list-style:none;display:grid;gap:4px}
