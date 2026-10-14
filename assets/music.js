@@ -15,7 +15,17 @@
   const session = (k, v) => { try { return v === undefined ? sessionStorage.getItem(k) : sessionStorage.setItem(k, v); } catch { return null; } };
   const saved = () => { try { return JSON.parse(session('musicPos')) || {}; } catch { return {}; } };
 
-  let on = session('musicOn') === '1';                 // muted until the visitor turns it on
+  // Muted whenever the site is opened or reloaded. It only stays on when the visitor moves to another
+  // page of the site (a link here, or Back / Forward) after turning it on.
+  const navType = (performance.getEntriesByType && (performance.getEntriesByType('navigation')[0] || {}).type) || '';
+  const carried = Date.now() - (+session('musicCarry') || 0) < 15000;
+  let on = session('musicOn') === '1' && (carried || navType === 'back_forward');
+  session('musicCarry', 0);
+  if (!on) session('musicOn', '0');
+  document.addEventListener('click', e => {             // following a link to another page of the site
+    const a = e.target.closest && e.target.closest('a[href]');
+    if (a && !a.target && new URL(a.href, location.href).origin === location.origin) session('musicCarry', Date.now());
+  }, true);
   const pos = saved();
   let i = (pos.i || 0) % TRACKS.length, r = pos.r ? 1 : 0;   // current track, active rain element
 

@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
+<div class="ambient" aria-hidden="true"><div class="amb-window"><div class="amb-city"></div><div class="amb-rain far"></div><div class="amb-rain"></div></div><div class="amb-desk"></div></div>
 <a class="skip" href="#main">Skip to content</a>
 <header class="top">
   <nav class="top-in" aria-label="Main">
@@ -35,8 +36,10 @@
       <span class="eyebrow">Resume</span>
       <h1>Julien Barozet-Golbery</h1>
       <p class="intro">M.Sc. student in Computer Science (AI &amp; Data Science) at EPFL · World models for Physical AI and Generative AI</p>
-      <p class="contact-line">Lausanne, CH · Paris, FR ·
+      <p class="contact-line">Lausanne, CH (current) · Paris, FR (hometown)</p>
+      <p class="contact-line">
         <a href="mailto:julienbarozet@gmail.com">julienbarozet@gmail.com</a> ·
+        <a href="tel:+33783895795">+33 7 83 89 57 95</a> ·
         <a href="https://github.com/Pijukai" target="_blank" rel="noopener">github.com/Pijukai</a> ·
         <a href="https://www.linkedin.com/in/julienbarozet" target="_blank" rel="noopener">linkedin.com/in/julienbarozet</a></p>
     </div>
@@ -46,84 +49,109 @@
     </div>
   </div>
 
-  <section aria-labelledby="edu">
-    <h2 id="edu">Education</h2>
-    <ul class="entries">
-      <li class="entry">
-        <span class="when">Sep 2025 — Feb 2028<br>(expected)</span>
-        <div><h3>M.Sc. in Computer Science, specialized in AI and Data Science</h3><p class="org">EPFL · GPA 5.45/6</p></div>
-      </li>
-      <li class="entry">
-        <span class="when">Sep 2022 — Jul 2025</span>
-        <div><h3>B.Sc. in Computer Science</h3><p class="org">EPFL</p></div>
-      </li>
-    </ul>
+  <!-- ✏️ Same order and content as the PDF resume (resume.pdf). -->
+  <section class="cv" aria-labelledby="cv-about">
+    <h2 id="cv-about">About me</h2>
+    <p>Master’s student at EPFL researching world modeling for Physical AI and Generative AI. Working across multiple research labs has taught me methodological rigor and the adaptability to get up to speed quickly with new techniques and domains. I’m also an outgoing, passionate person and genuinely a team player, who firmly believes I have a role to play in making the work environment more enjoyable for everyone. Looking for my next challenge!</p>
   </section>
 
-  <section aria-labelledby="exp">
-    <h2 id="exp">Experience</h2>
-    <ul class="entries">
-      <li class="entry">
-        <span class="when">Sep 2025 — Present</span>
-        <div>
-          <h3>Research Track Lead + Project Lead</h3><p class="org">EPFL AI Team</p>
-          <ul>
-            <li>Led a diverse team of 50+ researchers (undergraduates, graduates and PhDs) and engineers across 10+ interdisciplinary projects, with partnerships with CERN and EPFL labs (NeuroAI, LIAC).</li>
-            <li>Mentored and advised project teams, managed hiring, supervised progress to keep projects on track, pitched our expertise to prospective partners and translated their research gaps into concrete project outlines and roadmaps.</li>
-          </ul>
-        </div>
-      </li>
-      <li class="entry">
-        <span class="when">Jul 2025 — Aug 2025</span>
-        <div>
-          <h3>Machine Learning Engineer Intern</h3><p class="org">VikitAI</p>
-          <ul>
-            <li>Developed a Python-based AI agent backend using LangChain, exposed as a REST API with FastAPI and deployed to Google Cloud Platform via Docker.</li>
-            <li>Built a React.js web application with Stripe-based credit system integration, drastically reducing process execution time.</li>
-          </ul>
-        </div>
-      </li>
-      <li class="entry">
-        <span class="when">Sep 2024 — Jul 2026</span>
-        <div>
-          <h3>Teaching Assistant</h3><p class="org">EPFL · Introduction to Machine Learning, Analysis I, Linear Algebra</p>
-          <ul>
-            <li>Supported 150+ students through grading, tutoring and exercise sessions, helping them build conceptual understanding and improve their academic performance.</li>
-          </ul>
-        </div>
-      </li>
-    </ul>
-  </section>
-
-  <section aria-labelledby="research">
-    <h2 id="research">Research</h2>
-    <ul class="entries">
-      <li class="entry">
-        <span class="when">2026</span>
-        <div><h3>TAG-X: Joint Multispectral Representations for Molecular Structure Elucidation</h3><p class="org">NeurIPS 2026 ML4Molecules Workshop · <a href="publications.html">Publication →</a></p></div>
-      </li>
-      <li class="entry">
-        <span class="when">Sep 2025 — Present</span>
-        <div><h3>5 research projects</h3><p class="org">With EPFL NeuroAI, VITA and LASTRO labs, CERN and NVIDIA · <a href="projects.html">Projects →</a></p></div>
-      </li>
-    </ul>
-  </section>
-
-  <section aria-labelledby="skills">
-    <h2 id="skills">Skills</h2>
-    <dl class="skills">
-      <dt>Programming languages</dt>
-      <dd><ul class="chips"><li>Python</li><li>C</li><li>Scala</li><li>Kotlin</li><li>Java</li><li>VHDL</li><li>Assembly</li><li>SQL</li></ul></dd>
-      <dt>Engineering / DevOps</dt>
-      <dd><ul class="chips"><li>Linux</li><li>Git</li><li>Docker</li><li>SLURM (multi-GPU HPC)</li></ul></dd>
-      <dt>Machine learning / Data</dt>
-      <dd><ul class="chips"><li>PyTorch</li><li>scikit-learn</li><li>Matplotlib</li><li>Seaborn</li><li>Pandas</li><li>NumPy</li><li>LangChain</li></ul></dd>
+  <section class="cv" aria-labelledby="cv-exp">
+    <h2 id="cv-exp">Education &amp; Work Experience</h2>
+    <dl class="cv-edu">
+      <dt>09/2025 – 02/2028 (Expected)</dt><dd>M.Sc. in Computer Science specialized in AI and Data Science at EPFL, GPA: 5.45/6</dd>
+      <dt>09/2022 – 07/2025</dt><dd>B.Sc. in Computer Science at EPFL</dd>
     </dl>
+    <ul class="cv-list">
+      <li class="cv-item">
+        <div class="cv-row"><h3>Research Track Lead + Project Lead <span class="cv-org">at EPFL AI Team</span></h3><span class="cv-when">Sep 2025 – Present</span></div>
+        <ul>
+          <li>Led a diverse team of 50+ researchers (undergraduates, graduates and PhDs) and engineers across 10+ interdisciplinary projects at EPFL’s AI Team, with partnerships with CERN and EPFL labs (NeuroAI, LIAC).</li>
+          <li>Mentored and advised project teams, managed hiring, supervised progress to keep projects on track, pitched our expertise to prospective partners and translated their research gaps into concrete project outlines and roadmaps.</li>
+        </ul>
+      </li>
+      <li class="cv-item">
+        <div class="cv-row"><h3>Teaching Assistant</h3><span class="cv-when">Sep 2024 – Jul 2026</span></div>
+        <ul>
+          <li>Supported 150+ students in their learning journey. Key responsibilities included grading, tutoring, holding exercise sessions, enabling students to develop conceptual understanding and improve their academic performance.</li>
+          <li>Courses included Introduction to Machine Learning, Analysis I and Linear Algebra.</li>
+        </ul>
+      </li>
+      <li class="cv-item">
+        <div class="cv-row"><h3>Machine Learning Engineer Intern <span class="cv-org">at VikitAI</span></h3><span class="cv-when">Jul 2025 – Aug 2025</span></div>
+        <ul>
+          <li>Developed a Python-based AI agent backend using LangChain, formatted as a REST API with FastAPI, and deployed to Google Cloud Platform via Docker container.</li>
+          <li>Built a React.js web application with Stripe-based credit system integration, reducing process execution time drastically.</li>
+        </ul>
+      </li>
+    </ul>
   </section>
 
-  <section aria-labelledby="lang">
-    <h2 id="lang">Languages</h2>
-    <ul class="chips"><li>French — native</li><li>English — C1</li></ul>
+  <section class="cv" aria-labelledby="cv-pub">
+    <h2 id="cv-pub">Publications</h2>
+    <ul class="cv-list">
+      <li class="cv-item">
+        <div class="cv-row"><h3><a href="publications.html">TAG-X: Joint Multispectral Representations for Molecular Structure Elucidation</a></h3><span class="cv-when">2026</span></div>
+        <p class="cv-authors">L. J. Vasseur, R. Gautam, M. Gfeller, <strong>J. Barozet-Golbery</strong>, R. Schlama, P. Schwaller</p>
+        <p class="cv-venue">NeurIPS 2026 ML4Molecules Workshop</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="cv" aria-labelledby="cv-proj">
+    <h2 id="cv-proj">Projects</h2>
+    <ul class="cv-list">
+      <li class="cv-item">
+        <div class="cv-row"><h3><a href="projects/brain.html">BRAIN Project</a> <span class="cv-org">(with EPFL NeuroAI Lab)</span></h3><span class="cv-when">Feb 2026 – Present</span></div>
+        <ul>
+          <li>Reconstructed/Retrieved the image or sound perceived by a person from non-invasive EEG brain recordings, which are highly noisy and subject-dependent time series.</li>
+          <li>Fine-tuned, optimized and benchmarked an EEG foundation model using LoRA combined with contrastive CLIP/CLAP alignment as a replacement for EEG decoders, aiming at reaching real-time performance while preserving accuracy.</li>
+          <li>Shipped an end-to-end EEG-to-image demo with &lt;1s latency, retaining ∼70% performance across metrics (top-k retrieval, SSIM, PixCorr, etc.), using as little as 25% of the data and 1/5 the training time for subject adaptation.</li>
+        </ul>
+        <a class="cv-more" href="projects/brain.html">Project page →</a>
+      </li>
+      <li class="cv-item">
+        <div class="cv-row"><h3><a href="projects/surgical-world-models.html">Evaluation Suite Design for Surgical Robot World Models</a></h3><span class="cv-when">Sep 2026 – Present</span></div>
+        <ul>
+          <li>Designed an evaluation suite for surgical robot world models, covering action faithfulness and tissue-biomechanical plausibility, to guide model development. Applied to NVIDIA Cosmos 3, under the supervision of an NVIDIA ML Engineer.</li>
+        </ul>
+        <a class="cv-more" href="projects/surgical-world-models.html">Project page →</a>
+      </li>
+      <li class="cv-item">
+        <div class="cv-row"><h3><a href="projects/egocentric-attention.html">Improving Attention in Egocentric World Models</a> <span class="cv-org">(with EPFL VITA Lab)</span></h3><span class="cv-when">Sep 2026 – Present</span></div>
+        <ul>
+          <li>Investigated different attention mechanisms such as register-token attention (à la VGGT-Omega) as an efficient replacement for full attention in diffusion world models for egocentric driving, targeting reduced training/inference time.</li>
+        </ul>
+        <a class="cv-more" href="projects/egocentric-attention.html">Project page →</a>
+      </li>
+      <li class="cv-item">
+        <div class="cv-row"><h3><a href="projects/atlas.html">ATLAS Project</a> <span class="cv-org">(with CERN)</span></h3><span class="cv-when">Sep 2025 – Feb 2026</span></div>
+        <ul>
+          <li>Accelerated Geant4-based Monte Carlo calorimeter simulation for the LHC through generative ML methods.</li>
+          <li>Used Stochastic Interpolants for low-resolution and an EDM model distilled through continuous-time Consistency Distillation for high-resolution simulation aiming at faster inference time.</li>
+          <li>Reached results close to established SOTA while using less memory.</li>
+        </ul>
+        <a class="cv-more" href="projects/atlas.html">Project page →</a>
+      </li>
+      <li class="cv-item">
+        <div class="cv-row"><h3><a href="projects/dark-matter.html">Dark Matter Density Generation</a> <span class="cv-org">(with EPFL LASTRO Lab)</span></h3><span class="cv-when">Sep 2025 – Dec 2025</span></div>
+        <ul>
+          <li>Generated dark matter galaxy cluster density maps from physical parameters.</li>
+          <li>Implemented a Diffusion Transformer (DDPM) with Adaptive LayerNorm conditioning on parameter embeddings.</li>
+          <li>Cut simulation time from 5–7 days to minutes compared to numerical simulations, achieving 0.8–1.0 cross-correlation at large scales and near-zero log-PSD ratio across all frequencies.</li>
+        </ul>
+        <a class="cv-more" href="projects/dark-matter.html">Project page →</a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="cv" aria-labelledby="cv-skills">
+    <h2 id="cv-skills">Skills</h2>
+    <dl class="cv-skills">
+      <dt>Programming languages</dt><dd>Python, C, Scala, Kotlin, Java, VHDL, Assembly, SQL</dd>
+      <dt>Engineering/DevOps</dt><dd>Linux, Git, Docker, SLURM (multi-GPU HPC)</dd>
+      <dt>Machine Learning/Data</dt><dd>PyTorch, scikit-learn, Matplotlib, Seaborn, Pandas, NumPy, LangChain</dd>
+      <dt>Languages</dt><dd>French (Native), English (C1)</dd>
+    </dl>
   </section>
 
   <section class="card pdf-box no-print" aria-labelledby="pdf">
@@ -142,7 +170,7 @@
   <div class="foot-in"><span>© <span class="yr"></span> Julien Barozet-Golbery</span><a href="index.html">← Back home</a></div>
 </footer>
 <script>document.querySelector('.yr').textContent = new Date().getFullYear();</script>
-<script src="assets/music.js"></script>
-<script src="assets/router.js"></script>
+<script src="assets/music.js?v=3"></script>
+<script src="assets/router.js?v=3"></script>
 </body>
 </html>
