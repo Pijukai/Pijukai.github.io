@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BRAIN Project — Julien Barozet-Golbery</title>
-<meta name="description" content="Reconstruct the image or sound a person perceives from non-invasive EEG recordings — highly noisy, subject-dependent time series — in real time.">
+<meta name="description" content="Decoding images and music from EEG, and bringing EEG-to-image reconstruction to real time with an EEG foundation model, LoRA and fast diffusion.">
 <meta name="theme-color" content="#16141d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/site.css?v=8">
+<link rel="stylesheet" href="../assets/site.css?v=11">
 </head>
 <body>
 <div class="ambient" aria-hidden="true"><div class="amb-window"><div class="amb-city"></div><div class="amb-rain far"></div><div class="amb-rain"></div></div><div class="amb-desk"></div></div>
@@ -32,39 +32,148 @@
   <div class="page-head">
     <span class="eyebrow">EPFL NeuroAI Lab · Feb 2026 — Present</span>
     <h1>BRAIN Project</h1>
-    <ul class="kw" aria-label="Keywords"><li>EEG</li><li>Foundation models</li><li>LoRA</li><li>CLIP / CLAP</li><li>NeuroAI</li></ul>
+    <p class="intro">Decoding what a person sees, and hears, from non-invasive brain recordings, and bringing it close enough to real time for a live demonstration. A research project with Louis James Vasseur.</p>
+    <ul class="kw" aria-label="Keywords"><li>EEG</li><li>Foundation models</li><li>LoRA</li><li>CLIP / CLAP</li><li>Diffusion</li><li>NeuroAI</li></ul>
   </div>
-
-  <!-- ✏️ Replace with <figure class="hero-img"><img src="../assets/projects/brain.jpg" alt="…"><figcaption>Caption</figcaption></figure> -->
-  <figure class="hero-img"><div class="thumb" aria-hidden="true"></div></figure>
 
   <div class="card">
     <dl class="outcome">
-          <dt>Objective</dt><dd>Reconstruct the image or sound a person perceives from non-invasive EEG recordings — highly noisy, subject-dependent time series — in real time.</dd>
-          <dt>Result</dt><dd>End-to-end EEG-to-image demo with &lt;1 s latency, retaining ~70% performance with only 25% of the data and 1/5 of the training time for subject adaptation.</dd>
-        </dl>
+      <dt>Objective</dt><dd>Reconstruct the image or sound a person perceives from EEG, a highly noisy, subject-dependent signal, fast enough for a real-time demonstrator.</dd>
+      <dt>Result</dt><dd>An EEG-to-image pipeline running end to end in 747 ms, adapting to a new person in about 7 minutes from a fraction of the usual recordings, with retrieval competitive with the state of the art.</dd>
+    </dl>
   </div>
 
-  <!-- ✏️ Placeholder sections — write the details of the project here. -->
   <section aria-labelledby="ctx">
     <h2 id="ctx">Context</h2>
-    <p class="muted">Why this project exists: the problem, who it was with, and what was missing before.</p>
+    <p>EEG (electroencephalography) records brain activity through electrodes on the scalp: cheap, safe and non-invasive, it can reveal what someone is looking at, listening to or feeling. But the signal is very noisy and differs from one person to the next. Decoding an image typically needs hours of recordings from each person and a long adaptation of the model, which rules out a live demo. And decoding <em>sounds</em>, or images and sounds together, is still largely unexplored.</p>
+    <p>We set out to do three things:</p>
+    <ul class="bullets">
+      <li><strong>Bring image decoding close to real time</strong>, without hours of recordings or long adaptation for each new person.</li>
+      <li><strong>Decode music and multimodal stimuli</strong> (image + sound), beyond the usual visual-only setting.</li>
+      <li><strong>Build the hardware and software</strong> needed to run the whole system live.</li>
+    </ul>
+    <p>We used <strong>THINGS-EEG2</strong> for vision: 10 participants, 64 channels, 16,740 naturalistic object images across 1,674 concepts, plus 200 held-out test concepts. For music we used <strong>NMED-T</strong> and <strong>NMED-H</strong>: 14 songs heard by up to 48 listeners. We harmonised everything onto a common 64-channel layout at 250 Hz, matching our own live EEG cap.</p>
+    <p>Progress is measured with four proxy metrics: <strong>decoding accuracy</strong>, <strong>end-to-end latency</strong>, <strong>adaptation time</strong> for a new person, and the <strong>amount of recording</strong> that person needs to give.</p>
   </section>
-  <section aria-labelledby="app">
-    <h2 id="app">Approach</h2>
-    <p class="muted">The method: data, model, training setup, and the key design choices.</p>
+
+  <section aria-labelledby="p1">
+    <h2 id="p1">Part 1 · Decoding images, music, and both</h2>
+    <p>The first half of the semester focused on decoding accuracy, including for modalities that are rarely tackled.</p>
+
+    <h3 class="step"><span>1</span> Vision: EEG → CLIP space → image</h3>
+    <p>A transformer encoder (ATM-S), trained separately for each person, maps one EEG trial into CLIP’s image–text embedding space, close to the image that caused it. It learns contrastively: pulled towards the right image, pushed away from all others. Because EEG only carries a coarse trace of a scene, we trained it under an <strong>uncertainty-aware blur prior</strong>: the target image is blurred in proportion to how unreliably the brain encoded it, so the model isn’t punished for detail the signal never had. This clearly improved on the vanilla encoder.</p>
+    <p>The decoded vector is then used to <strong>retrieve</strong> the closest test image, or to <strong>reconstruct</strong> one: a small prior network pulls it back onto the manifold of real image embeddings, and an IP-Adapter feeds it to Stable Diffusion XL in place of a text prompt.</p>
+    <p>The best subject (a 1.7 M-parameter decoder) beats the subject-averaged results of ENIGMA and ATM-S on retrieval. Reconstruction fidelity trails ENIGMA, though (CLIP 67.8 vs 81.5, PixCorr 0.118 vs 0.172): the decoder is parameter-efficient and strong at retrieval rather than the sharpest reconstructor. Averaged over subjects it reaches a Top-1 of 24.2 % (± 5.2).</p>
+
+    <h3 class="step"><span>2</span> Music: EEG → which song is playing</h3>
+    <p>A convolutional encoder (SampleCNN2DEEG, from the PredANN line of work) reads a 3-second EEG window as an image of channels × time and predicts which song the person is hearing. An optional contrastive head can align it with CLAP captions of each song (harmony, timbre, rhythm, mood, genre) written by Music Flamingo.</p>
+    <figure class="fig">
+      <figcaption class="fig-t" id="fig-song">Song identification accuracy from EEG</figcaption>
+      <div class="legend"><span><i style="background:#8a75f0"></i>Per 3-second segment</span><span><i style="background:#c97a3e"></i>Pooled over a full trial</span></div><svg class="chart" viewBox="0 0 560 218" role="img" aria-labelledby="fig-song"><line class="grid" x1="160.0" x2="160.0" y1="18" y2="192"/><text class="tick" x="160.0" y="208" text-anchor="middle">0</text><line class="grid" x1="247.0" x2="247.0" y1="18" y2="192"/><text class="tick" x="247.0" y="208" text-anchor="middle">0.25</text><line class="grid" x1="334.0" x2="334.0" y1="18" y2="192"/><text class="tick" x="334.0" y="208" text-anchor="middle">0.5</text><line class="grid" x1="421.0" x2="421.0" y1="18" y2="192"/><text class="tick" x="421.0" y="208" text-anchor="middle">0.75</text><line class="grid" x1="508.0" x2="508.0" y1="18" y2="192"/><text class="tick" x="508.0" y="208" text-anchor="middle">1</text><text class="lab" x="0" y="51.5">NMED-T · 10 songs</text><g class="mark"><title>NMED-T, cross-entropy: 0.817 per segment</title><path d="M160,32 H440.3 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H160 Z" fill="#8a75f0"/><rect x="160" y="31" width="394" height="16" fill="transparent"/></g><text class="val" x="450.3" y="43">0.82</text><g class="mark"><title>NMED-T, cross-entropy: 0.942 pooled</title><path d="M160,48 H483.8 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H160 Z" fill="#c97a3e"/><rect x="160" y="47" width="394" height="16" fill="transparent"/></g><text class="val" x="493.8" y="59">0.94</text><text class="lab" x="0" y="109.5">NMED-T · + InfoNCE</text><g class="mark"><title>NMED-T, CE + InfoNCE: 0.778 per segment</title><path d="M160,90 H426.7 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H160 Z" fill="#8a75f0"/><rect x="160" y="89" width="394" height="16" fill="transparent"/></g><text class="val" x="436.7" y="101">0.78</text><g class="mark"><title>NMED-T, CE + InfoNCE: 0.908 pooled</title><path d="M160,106 H472.0 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H160 Z" fill="#c97a3e"/><rect x="160" y="105" width="394" height="16" fill="transparent"/></g><text class="val" x="482.0" y="117">0.91</text><text class="lab" x="0" y="167.5">NMED-T + H · 14 songs</text><g class="mark"><title>NMED-T + NMED-H: 0.865 per segment</title><path d="M160,148 H457.0 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H160 Z" fill="#8a75f0"/><rect x="160" y="147" width="394" height="16" fill="transparent"/></g><text class="val" x="467.0" y="159">0.86</text><g class="mark"><title>NMED-T + NMED-H: 0.944 pooled</title><path d="M160,164 H484.5 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H160 Z" fill="#c97a3e"/><rect x="160" y="163" width="394" height="16" fill="transparent"/></g><text class="val" x="494.5" y="175">0.94</text><line class="axis" x1="160" x2="160" y1="18" y2="192"/></svg>
+      <figcaption>Chance level: 0.10 for 10 songs, 0.071 for 14. “Pooled” averages all 3-second windows of one listening session. NMED-T is the clean headline: the combined set mixes in NMED-H, whose listeners differ per song, so a model could partly recognise the person (a subject-lookup baseline scores 0.317).</figcaption>
+    </figure>
+    <p>On NMED-T this is on par with the published baseline (0.823) and far above our own first attempt (0.635). Regenerating the music itself from the predicted caption with AudioLDM2 remains weak.</p>
+
+    <h3 class="step"><span>3</span> Image + music together</h3>
+    <p>The multimodal pipeline turns both decodings into words. The visual embedding retrieves an image caption (object, attribute, scene, theme) and the predicted song retrieves its music caption, and the two are merged into one prompt. The image is generated from that prompt <em>and</em> warm-started from the visual embedding through an IP-Adapter. A weight (<code>ip_scale</code>) balances the two paths, and the same music caption drives a 3-second audio clip.</p>
+    <p>At <code>ip_scale</code> = 0.8 the visual embedding dominates: the fused prompt scores the same as the visual-only one (CLIP 0.326 vs 0.329, two-way accuracy 0.655 for both), and the music only reshapes the image at lower weights. The output is coherent, with the song’s identity well carried but its waveform still hard to reconstruct (CLAP 0.31, up to 0.43 when averaging several generations). This is a first step: its full potential needs paired image + audio recordings.</p>
   </section>
-  <section aria-labelledby="resu">
-    <h2 id="resu">Results</h2>
-    <p class="muted">The main numbers, figures and comparisons to baselines.</p>
+
+  <section aria-labelledby="p2">
+    <h2 id="p2">Part 2 · Toward a real-time demonstrator</h2>
+    <p>In the second half we optimised all four metrics at once. The standard recipe (an EEG decoder followed by SDXL) has a bottleneck at each end: the decoder needs hours of recordings and a long adaptation for every new person, and the image generator dominates the latency.</p>
+
+    <h3 class="step"><span>1</span> An EEG foundation model that adapts in minutes</h3>
+    <p>Fast adaptation calls for a strong shared backbone plus a tiny person-specific part. We used the <strong>LUNA</strong> EEG foundation model with <strong>LoRA</strong> adapters, prepared in three phases:</p>
+    <ol class="bullets">
+      <li><strong>Continuous learning</strong>: extending LUNA’s pre-training to THINGS-EEG2, following its original recipe.</li>
+      <li><strong>CLIP alignment</strong>: freezing the backbone and training a new attention layer to bring its representations into CLIP space.</li>
+      <li><strong>Subject adaptation</strong>: the model stays frozen and only a LoRA adapter (rank 8) learns the new person, sped up by three refinements: <strong>PiSSA</strong> initialisation from the weights’ principal components, <strong>rsLoRA</strong> scaling (α/√r) for steadier training, and <strong>LoRA+</strong>, which gives one adapter matrix an 8× higher learning rate.</li>
+    </ol>
+    <p>The person used for evaluation (subject 10) was held out of phases 1 and 2, so adaptation is tested on a truly new brain.</p>
+    <div class="stats">
+      <div class="stat"><span class="stat-n">~7 min</span><span class="stat-l">to adapt to a new person (25 % of the data, 10 epochs), vs 59 min with everything</span></div>
+      <div class="stat"><span class="stat-n">8 h → 48 min</span><span class="stat-l">of recording needed for meaningful results (10 % of the data)</span></div>
+    </div>
+    <figure class="fig">
+      <figcaption class="fig-t" id="fig-top10">Top-10 image retrieval accuracy</figcaption>
+      <div class="legend"><span><i style="background:#8a75f0"></i>Ours (LUNA-Huge + LoRA, held-out subject 10)</span><span><i style="background:#c97a3e"></i>Published baselines</span></div><svg class="chart" viewBox="0 0 560 268" role="img" aria-labelledby="fig-top10"><line class="grid" x1="150.0" x2="150.0" y1="18" y2="242"/><text class="tick" x="150.0" y="258" text-anchor="middle">0</text><line class="grid" x1="239.5" x2="239.5" y1="18" y2="242"/><text class="tick" x="239.5" y="258" text-anchor="middle">20</text><line class="grid" x1="329.0" x2="329.0" y1="18" y2="242"/><text class="tick" x="329.0" y="258" text-anchor="middle">40</text><line class="grid" x1="418.5" x2="418.5" y1="18" y2="242"/><text class="tick" x="418.5" y="258" text-anchor="middle">60</text><line class="grid" x1="508.0" x2="508.0" y1="18" y2="242"/><text class="tick" x="508.0" y="258" text-anchor="middle">80</text><text class="lab" x="0" y="36.5">Ours · full data</text><g class="mark"><title>Ours, 100 % data, 50 epochs: Top-10 63.0 %</title><path d="M150,25 H427.9 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H150 Z" fill="#8a75f0"/><rect x="150" y="24" width="404" height="16" fill="transparent"/></g><text class="val" x="437.9" y="36">63 %</text><text class="lab" x="0" y="64.5">Ours · 75 % data</text><g class="mark"><title>Ours, 75 % data, 50 epochs: Top-10 62.5 %</title><path d="M150,53 H425.7 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H150 Z" fill="#8a75f0"/><rect x="150" y="52" width="404" height="16" fill="transparent"/></g><text class="val" x="435.7" y="64">62.5 %</text><text class="lab" x="0" y="92.5">Ours · 10 % data</text><g class="mark"><title>Ours, 10 % data (48 min of EEG), 50 epochs: Top-10 50.5 %</title><path d="M150,81 H372.0 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H150 Z" fill="#8a75f0"/><rect x="150" y="80" width="404" height="16" fill="transparent"/></g><text class="val" x="382.0" y="92">50.5 %</text><text class="lab" x="0" y="120.5">Ours · live setting</text><g class="mark"><title>Ours, 25 % data, 10 epochs (7 min adaptation): Top-10 50.5 %</title><path d="M150,109 H372.0 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H150 Z" fill="#8a75f0"/><rect x="150" y="108" width="404" height="16" fill="transparent"/></g><text class="val" x="382.0" y="120">50.5 %</text><text class="lab" x="0" y="148.5">ATM-S · single</text><g class="mark"><title>ATM-S, single-subject (avg. over subjects): Top-10 73.6 %</title><path d="M150,137 H475.4 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H150 Z" fill="#c97a3e"/><rect x="150" y="136" width="404" height="16" fill="transparent"/></g><text class="val" x="485.4" y="148">73.6 %</text><text class="lab" x="0" y="176.5">ENIGMA · single</text><g class="mark"><title>ENIGMA, single-subject (avg. over subjects): Top-10 71.15 %</title><path d="M150,165 H464.4 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H150 Z" fill="#c97a3e"/><rect x="150" y="164" width="404" height="16" fill="transparent"/></g><text class="val" x="474.4" y="176">71.15 %</text><text class="lab" x="0" y="204.5">ENIGMA · multi</text><g class="mark"><title>ENIGMA, multi-subject: Top-10 64.05 %</title><path d="M150,193 H432.6 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H150 Z" fill="#c97a3e"/><rect x="150" y="192" width="404" height="16" fill="transparent"/></g><text class="val" x="442.6" y="204">64.05 %</text><text class="lab" x="0" y="232.5">ATM-S · multi</text><g class="mark"><title>ATM-S, multi-subject: Top-10 62.2 %</title><path d="M150,221 H424.3 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H150 Z" fill="#c97a3e"/><rect x="150" y="220" width="404" height="16" fill="transparent"/></g><text class="val" x="434.3" y="232">62.2 %</text><line class="axis" x1="150" x2="150" y1="18" y2="242"/></svg>
+      <figcaption>Ours is measured on the held-out subject 10; baselines are averaged over subjects as published. With 75–100 % of the data we match the multi-subject baselines and come close to the single-subject ones, and far less data still gives competitive results.</figcaption>
+    </figure>
+
+    <h3 class="step"><span>2</span> A generator fast enough for real time</h3>
+    <p>We benchmarked two families of accelerators against 50-step SDXL, with the same input embeddings so the generator was the only variable: <strong>distillation</strong> (DMD2, SDXL-Lightning, SDXL-Turbo), which squeezes the denoising into a few steps, and <strong>training-free caching</strong> (DeepCache), which reuses deep activations between neighbouring steps.</p>
+    <figure class="fig">
+      <figcaption class="fig-t" id="fig-lat">Generation latency for one image</figcaption>
+      <div class="legend"><span><i style="background:#8a75f0"></i>Other generators</span><span><i style="background:#c97a3e"></i>Kept: DeepCache (fidelity) and SDXL-Turbo (live demo)</span></div><svg class="chart" viewBox="0 0 560 240" role="img" aria-labelledby="fig-lat"><line class="grid" x1="150.0" x2="150.0" y1="18" y2="214"/><text class="tick" x="150.0" y="230" text-anchor="middle">0</text><line class="grid" x1="229.6" x2="229.6" y1="18" y2="214"/><text class="tick" x="229.6" y="230" text-anchor="middle">2000</text><line class="grid" x1="309.1" x2="309.1" y1="18" y2="214"/><text class="tick" x="309.1" y="230" text-anchor="middle">4000</text><line class="grid" x1="388.7" x2="388.7" y1="18" y2="214"/><text class="tick" x="388.7" y="230" text-anchor="middle">6000</text><line class="grid" x1="468.2" x2="468.2" y1="18" y2="214"/><text class="tick" x="468.2" y="230" text-anchor="middle">8000</text><text class="lab" x="0" y="36.5">SDXL-base · 50 steps</text><g class="mark"><title>SDXL-base, 50 steps (reference): 8,286 ms</title><path d="M150,25 H475.6 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H150 Z" fill="#8a75f0"/><rect x="150" y="24" width="404" height="16" fill="transparent"/></g><text class="val" x="485.6" y="36">8,286 ms</text><text class="lab" x="0" y="64.5">+ DeepCache</text><g class="mark"><title>SDXL-base + DeepCache (training-free): 3,265 ms, CMMD 0.018</title><path d="M150,53 H275.9 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H150 Z" fill="#c97a3e"/><rect x="150" y="52" width="404" height="16" fill="transparent"/></g><text class="val" x="285.9" y="64">3,265 ms</text><text class="lab" x="0" y="92.5">SDXL-Lightning-8</text><g class="mark"><title>SDXL-Lightning, 8 steps: 1,650 ms, CMMD 0.100</title><path d="M150,81 H211.6 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H150 Z" fill="#8a75f0"/><rect x="150" y="80" width="404" height="16" fill="transparent"/></g><text class="val" x="221.6" y="92">1,650 ms</text><text class="lab" x="0" y="120.5">DMD2</text><g class="mark"><title>DMD2 (distilled): 1,122 ms, CMMD 0.066</title><path d="M150,109 H190.6 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H150 Z" fill="#8a75f0"/><rect x="150" y="108" width="404" height="16" fill="transparent"/></g><text class="val" x="200.6" y="120">1,122 ms</text><text class="lab" x="0" y="148.5">SDXL-Lightning-4</text><g class="mark"><title>SDXL-Lightning, 4 steps: 1,119 ms, CMMD 0.106</title><path d="M150,137 H190.5 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H150 Z" fill="#8a75f0"/><rect x="150" y="136" width="404" height="16" fill="transparent"/></g><text class="val" x="200.5" y="148">1,119 ms</text><text class="lab" x="0" y="176.5">DMD2 + DeepCache</text><g class="mark"><title>DMD2 + DeepCache: 865 ms, CMMD 0.568 (fidelity collapses)</title><path d="M150,165 H180.4 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H150 Z" fill="#8a75f0"/><rect x="150" y="164" width="404" height="16" fill="transparent"/></g><text class="val" x="190.4" y="176">865 ms</text><text class="lab" x="0" y="204.5">SDXL-Turbo · 1 step</text><g class="mark"><title>SDXL-Turbo, 1 step: 179 ms, CMMD 0.132</title><path d="M150,193 H153.1 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H150 Z" fill="#c97a3e"/><rect x="150" y="192" width="404" height="16" fill="transparent"/></g><text class="val" x="163.1" y="204">179 ms</text><line class="axis" x1="150" x2="150" y1="18" y2="214"/></svg>
+      <table class="tbl">
+        <thead><tr><th>Generator</th><th>Latency</th><th>CMMD ↓</th><th>KID ↓</th></tr></thead>
+        <tbody>
+          <tr><td>SDXL-base, 50 steps (reference)</td><td>8,286 ms</td><td>0.000</td><td>0.0000</td></tr>
+          <tr><td>+ DeepCache</td><td>3,265 ms</td><td>0.018</td><td>0.0001</td></tr>
+          <tr><td>DMD2</td><td>1,122 ms</td><td>0.066</td><td>0.0003</td></tr>
+          <tr><td>SDXL-Lightning-8</td><td>1,650 ms</td><td>0.100</td><td>0.0006</td></tr>
+          <tr><td>SDXL-Lightning-4</td><td>1,119 ms</td><td>0.106</td><td>0.0006</td></tr>
+          <tr><td>SDXL-Turbo, 1 step</td><td>179 ms</td><td>0.132</td><td>0.0007</td></tr>
+          <tr><td>DMD2 + DeepCache</td><td>865 ms</td><td>0.568</td><td>0.0021</td></tr>
+        </tbody>
+      </table>
+      <figcaption>CMMD and KID measure how far generated images drift from the reference model’s (lower is better). We used them instead of FID, which is unreliable on small samples.</figcaption>
+    </figure>
+    <p>Caching cuts latency 2.5× with almost no loss of fidelity, while distillation is faster still but drifts further from the reference. Stacking the two compounds their approximations and collapses quality, so you have to pick one. DeepCache is the best trade-off for reconstruction quality, and the live pipeline uses one-step <strong>SDXL-Turbo</strong> to stay well under a second.</p>
+
+    <h3 class="step"><span>3</span> The final pipeline</h3>
+    <figure class="fig">
+      <svg class="diagram" viewBox="0 0 760 150" role="img" aria-labelledby="fig-arch">
+  <defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ahead"/></marker></defs>
+  <rect class="io" x="0" y="44" width="112" height="62" rx="10"/><text class="t" x="56" y="70" text-anchor="middle">EEG</text><text class="s" x="56" y="88" text-anchor="middle">64 ch · 250 Hz</text>
+  <rect class="box" x="148" y="20" width="190" height="62" rx="10"/><text class="t b" x="243" y="46" text-anchor="middle">LUNA-Huge</text><text class="s" x="243" y="64" text-anchor="middle">EEG foundation model · frozen</text>
+  <rect class="box hl" x="148" y="90" width="190" height="42" rx="10"/><text class="t" x="243" y="116" text-anchor="middle">+ LoRA adapter (per subject)</text>
+  <rect class="io" x="374" y="48" width="122" height="54" rx="27"/><text class="t" x="435" y="72" text-anchor="middle">CLIP-like</text><text class="t" x="435" y="89" text-anchor="middle">embedding</text>
+  <rect class="box" x="532" y="44" width="134" height="62" rx="10"/><text class="t b" x="599" y="70" text-anchor="middle">SDXL-Turbo</text><text class="s" x="599" y="88" text-anchor="middle">1-step generator</text>
+  <text class="t" x="760" y="80" text-anchor="end">image</text>
+  <path class="arrow" d="M112,75 H144" marker-end="url(#ah2)"/><path class="arrow" d="M338,75 H370" marker-end="url(#ah2)"/>
+  <path class="arrow" d="M496,75 H528" marker-end="url(#ah2)"/><path class="arrow" d="M666,75 H712" marker-end="url(#ah2)"/>
+  <text class="mode" x="380" y="146" text-anchor="middle">747 ms end to end</text>
+</svg>
+      <figcaption id="fig-arch">Final architecture: the frozen LUNA model plus a person-specific LoRA adapter turns EEG into a CLIP-like embedding, and SDXL-Turbo renders the image.</figcaption>
+    </figure>
+    <p>The full pipeline runs in <strong>747 ms end to end</strong>, under the real-time threshold. With all the data it lands slightly below ENIGMA and ATM-S but stays competitive. With only 10 % of the data it matches the full setting on every reconstruction metric (only retrieval drops), and the 25 %, 10-epoch “live” setting stays competitive too.</p>
+    <details class="hp">
+      <summary>Full benchmark on THINGS-EEG2</summary>
+      <table class="tbl">
+        <thead><tr><th>Method</th><th>PixCorr ↑</th><th>SSIM ↑</th><th>Alex(2) ↑</th><th>Alex(5) ↑</th><th>Incep ↑</th><th>Eff ↓</th><th>SwAV ↓</th><th>Top-1 ↑</th><th>Top-5 ↑</th><th>Top-10 ↑</th></tr></thead>
+        <tbody>
+          <tr><td>ENIGMA · multi</td><td>.1668</td><td>.4264</td><td>82.99</td><td>89.12</td><td>76.54</td><td>.8577</td><td>.5399</td><td>22.55</td><td>50.75</td><td>64.05</td></tr>
+          <tr><td>ATM-S · multi</td><td>.072</td><td>.403</td><td>57.09</td><td>58.99</td><td>52.86</td><td>.963</td><td>.663</td><td>16.20</td><td>45.10</td><td>62.20</td></tr>
+          <tr><td>ENIGMA · single</td><td>.1718</td><td>.4233</td><td>83.64</td><td>89.49</td><td>77.65</td><td>.8547</td><td>.5403</td><td>27.60</td><td>59.35</td><td>71.15</td></tr>
+          <tr><td>ATM-S · single</td><td>.136</td><td>.392</td><td>73.85</td><td>80.83</td><td>67.56</td><td>.909</td><td>.601</td><td>30.15</td><td>60.15</td><td>73.60</td></tr>
+          <tr><td>Ours · full (100 %, 50 ep.)</td><td>.130</td><td>.332</td><td>64.8</td><td>71.6</td><td>58.2</td><td>.958</td><td>.658</td><td>18.5</td><td>48.0</td><td>63.0</td></tr>
+          <tr><td>Ours · 75 %, 50 ep.</td><td>.119</td><td>.334</td><td>65.8</td><td>72.7</td><td>57.4</td><td>.955</td><td>.654</td><td>19.5</td><td>49.0</td><td>62.5</td></tr>
+          <tr><td>Ours · 10 %, 50 ep.</td><td>.142</td><td>.343</td><td>65.8</td><td>72.8</td><td>55.4</td><td>.967</td><td>.659</td><td>11.5</td><td>36.0</td><td>50.5</td></tr>
+          <tr><td>Ours · live (25 %, 10 ep.)</td><td>.114</td><td>.354</td><td>63.1</td><td>65.3</td><td>55.4</td><td>.980</td><td>.676</td><td>12.0</td><td>34.5</td><td>50.5</td></tr>
+        </tbody>
+      </table>
+      <p class="muted">Low-level: pixel correlation and structural similarity. High-level: two-way comparisons (%) in AlexNet and Inception feature space. Distances: EfficientNet and SwAV. Retrieval: Top-k accuracy (%).</p>
+    </details>
   </section>
+
+  <section aria-labelledby="live">
+    <h2 id="live">From offline to live</h2>
+    <p>We commissioned a real acquisition setup: a 64-channel g.GAMMAcap feeding four synchronised g.USBamp amplifiers. We read them through an open-source USB path (libusb and mushu) inside a Linux VM, bypassing the manufacturer’s closed Windows driver, and timestamped EEG and stimulus markers on a single <strong>Lab Streaming Layer</strong> clock. A live epoch has exactly the shape of an offline one (training montage, 250 Hz, 240-sample windows), so the models can consume it as-is. We confirmed real, time-locked EEG with a clean eyes-closed alpha rhythm.</p>
+    <p>The remaining obstacle is <strong>signal quality</strong>, not software. Lab-grade training data versus our cap (impedances, line noise), the legacy channel ordering, and the much higher signal-to-noise needed for visual responses still stand between us and a valid live reconstruction. The next steps are calibration and the ~7-minute on-device adaptation characterised offline.</p>
+  </section>
+
+  <section aria-labelledby="lim">
+    <h2 id="lim">Limits &amp; next steps</h2>
+    <p>The recording each new person must give still needs to shrink: generating synthetic EEG is a promising lead. Robustness is the other open question: THINGS-EEG2 is highly curated, and real-world recordings will be noisier.</p>
+  </section>
+
   <section aria-labelledby="role">
-    <h2 id="role">My role &amp; what I learned</h2>
-    <p class="muted">What you personally did, and what you’d do differently next time.</p>
-  </section>
-  <section aria-labelledby="lnk">
-    <h2 id="lnk">Links</h2>
-    <div class="actions"><a class="btn ghost sm" href="#">Code ↗</a><a class="btn ghost sm" href="#">Report ↗</a></div>
+    <h2 id="role">My role</h2>
+    <p>I worked on decoding both the <strong>image and the sound</strong> a person perceives from EEG. On the real-time side, I fine-tuned, optimised and benchmarked an <strong>EEG foundation model with LoRA</strong>, combined with contrastive CLIP/CLAP alignment, as a replacement for task-specific EEG decoders, aiming for real-time speed without giving up accuracy.</p>
+    <p>That work led to an <strong>end-to-end EEG-to-image demo with under one second of latency</strong>. It retains around 70 % of the performance across metrics (top-k retrieval, SSIM, PixCorr…) while using as little as <strong>25 % of the data</strong> and <strong>a fifth of the training time</strong> to adapt to a new person.</p>
+    <!-- ✏️ Optional: add what you learned or would do differently -->
   </section>
 
   <nav class="pager" aria-label="More projects"><span></span><a class="next" href="surgical-world-models.html"><span>Next →</span>Evaluation Suite for Surgical Robot World Models</a></nav>

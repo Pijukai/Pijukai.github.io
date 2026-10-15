@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dark Matter Density Generation — Julien Barozet-Golbery</title>
-<meta name="description" content="Generate dark matter galaxy cluster density maps directly from physical parameters.">
+<meta name="description" content="Generating galaxy-cluster dark-matter maps from physics with AstroPT, flow matching and a Diffusion Transformer.">
 <meta name="theme-color" content="#16141d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/site.css?v=8">
+<link rel="stylesheet" href="../assets/site.css?v=11">
 </head>
 <body>
 <div class="ambient" aria-hidden="true"><div class="amb-window"><div class="amb-city"></div><div class="amb-rain far"></div><div class="amb-rain"></div></div><div class="amb-desk"></div></div>
@@ -32,39 +32,133 @@
   <div class="page-head">
     <span class="eyebrow">EPFL LASTRO Lab · Sep 2025 — Dec 2025</span>
     <h1>Dark Matter Density Generation</h1>
-    <ul class="kw" aria-label="Keywords"><li>Diffusion Transformer</li><li>DDPM</li><li>AdaLN</li><li>Astrophysics</li></ul>
+    <p class="intro">Efficient, physically aware generation of dark-matter distributions in galaxy clusters. A team project with Mattéo Santini and Louis James Vasseur.</p>
+    <ul class="kw" aria-label="Keywords"><li>Diffusion Transformer</li><li>Flow matching</li><li>AstroPT</li><li>Contrastive learning</li><li>Astrophysics</li></ul>
   </div>
-
-  <!-- ✏️ Replace with <figure class="hero-img"><img src="../assets/projects/dark-matter.jpg" alt="…"><figcaption>Caption</figcaption></figure> -->
-  <figure class="hero-img"><div class="thumb" aria-hidden="true"></div></figure>
 
   <div class="card">
     <dl class="outcome">
-          <dt>Objective</dt><dd>Generate dark matter galaxy cluster density maps directly from physical parameters.</dd>
-          <dt>Result</dt><dd>Simulation time cut from 5–7 days to minutes, with 0.8–1.0 cross-correlation at large scales and a near-zero log-PSD ratio across all frequencies.</dd>
-        </dl>
+      <dt>Objective</dt><dd>Generate realistic galaxy-cluster mass maps directly from physical parameters, instead of running new, expensive particle simulations.</dd>
+      <dt>Result</dt><dd>Maps in minutes instead of days of simulation, with near-perfect reconstruction of large-scale structure (cross-correlation 0.8–1.0) and a power spectrum within ±10 % of real maps at mid scales.</dd>
+    </dl>
   </div>
 
-  <!-- ✏️ Placeholder sections — write the details of the project here. -->
   <section aria-labelledby="ctx">
     <h2 id="ctx">Context</h2>
-    <p class="muted">Why this project exists: the problem, who it was with, and what was missing before.</p>
+    <p>About 85 % of the matter in the universe is dark matter: we can’t see it, but its gravity shapes everything around it. Galaxy clusters, 10<sup>14</sup>–10<sup>15</sup> times the mass of the Sun and mostly dark matter, bend the light of galaxies behind them. Those distortions make clusters natural “cosmic lenses” to map where dark matter is.</p>
+    <p>Neural networks are promising for reading physical properties off these maps, such as how strongly dark matter interacts with itself (its self-interaction cross-section, σ<sub>DM</sub>/m). But they need lots of training data, and each new map comes from huge numerical simulations (2 × 1024³ particles) that take days to run. Our question: <strong>can a generative model learn to produce realistic cluster maps directly, and skip the simulation?</strong></p>
+    <p>We worked with 14,400 annotated maps from the BAHAMAS simulations, labelled with the cluster’s total mass, the shape of its brightest galaxy and σ<sub>DM</sub>/m ∈ {0.01, 0.1, 0.3, 1.0} cm²/g. Although σ<sub>DM</sub>/m only takes four values here, we treated it as continuous, since it is a continuous physical quantity and the model should generalise as more data becomes available.</p>
   </section>
+
   <section aria-labelledby="app">
     <h2 id="app">Approach</h2>
-    <p class="muted">The method: data, model, training setup, and the key design choices.</p>
+    <p>The pipeline compresses the physics into an <em>embedding</em>, then a diffusion model turns that embedding into a map. There are two ways to get the embedding:</p>
+    <figure class="fig">
+      <svg class="diagram" viewBox="0 0 760 236" role="img" aria-labelledby="fig-pipe">
+  <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ahead"/></marker></defs>
+  <text class="mode" x="0" y="18">Mode 1 · generate from physics</text>
+  <rect class="io" x="0" y="34" width="132" height="54" rx="10"/><text class="t" x="66" y="57" text-anchor="middle">mass,</text><text class="t" x="66" y="75" text-anchor="middle">σ<tspan baseline-shift="sub" font-size="9">DM</tspan>/m</text>
+  <rect class="box" x="172" y="34" width="168" height="54" rx="10"/><text class="t b" x="256" y="57" text-anchor="middle">Flow matching</text><text class="s" x="256" y="75" text-anchor="middle">MLP velocity field</text>
+  <text class="mode" x="0" y="140">Mode 2 · reconstruct a map</text>
+  <rect class="io" x="0" y="156" width="132" height="54" rx="10"/><text class="t" x="66" y="179" text-anchor="middle">existing</text><text class="t" x="66" y="197" text-anchor="middle">density map</text>
+  <rect class="box" x="172" y="156" width="168" height="54" rx="10"/><text class="t b" x="256" y="179" text-anchor="middle">AstroPT</text><text class="s" x="256" y="197" text-anchor="middle">fine-tuned encoder</text>
+  <rect class="io" x="384" y="95" width="104" height="54" rx="27"/><text class="t" x="436" y="126" text-anchor="middle">embedding</text>
+  <rect class="box hl" x="528" y="88" width="148" height="68" rx="10"/><text class="t b" x="602" y="114" text-anchor="middle">Diffusion</text><text class="t b" x="602" y="131" text-anchor="middle">Transformer</text><text class="s" x="602" y="147" text-anchor="middle">DDPM · AdaLN</text>
+  <text class="t" x="760" y="117" text-anchor="end">density</text><text class="t" x="760" y="134" text-anchor="end">map</text>
+  <path class="arrow" d="M132,61 H168" marker-end="url(#ah)"/><path class="arrow" d="M132,183 H168" marker-end="url(#ah)"/>
+  <path class="arrow" d="M340,61 C366,61 366,110 380,118" marker-end="url(#ah)"/><path class="arrow" d="M340,183 C366,183 366,134 380,126" marker-end="url(#ah)"/>
+  <path class="arrow" d="M488,122 H524" marker-end="url(#ah)"/><path class="arrow" d="M676,122 H716" marker-end="url(#ah)"/>
+</svg>
+      <figcaption id="fig-pipe">The inference pipeline. Mode 1 generates a new map from (mass, σ<sub>DM</sub>/m) alone. Mode 2 encodes an existing map and reconstructs it.</figcaption>
+    </figure>
+
+    <h3 class="step"><span>1</span> Fine-tuning AstroPT into a physics-aware encoder</h3>
+    <p>AstroPT is an autoregressive transformer pretrained on 8.6 M galaxy images, and one of the main foundation models in astrophysics. We fully unfroze it and trained it on two objectives at once, so its embeddings would capture mass and σ<sub>DM</sub>/m well:</p>
+    <ul class="bullets">
+      <li><strong>Regression</strong>: a linear head predicts mass, σ<sub>DM</sub>/m, galaxy shape and ellipticity with an MSE loss.</li>
+      <li><strong>Supervised contrastive loss</strong> (InfoNCE) on σ<sub>DM</sub>/m: maps with the same value are pulled together and different values pushed apart, giving the diffusion model a well-structured conditioning space. Its weight is warmed up over the first epochs:</li>
+    </ul>
+    <p class="eq">λ<sub>c</sub>(e) = λ<sub>c</sub><sup>*</sup> · min(1, e / N<sub>w</sub>)</p>
+
+    <h3 class="step"><span>2</span> Flow matching to generate embeddings from physics</h3>
+    <p>To create a <em>new</em> map there is no input image to encode, so we learned to generate embeddings directly from (mass, σ<sub>DM</sub>/m). A small MLP learns a conditioned, time-dependent velocity field v<sub>θ</sub> that carries Gaussian noise x<sub>0</sub> to a point x<sub>1</sub> on the embedding manifold, trained with the conditional flow-matching loss:</p>
+    <p class="eq">𝔼<sub>t, x₁, x</sub> ‖ v<sub>θ</sub>(x) − u<sub>t</sub>(x | x₁) ‖²</p>
+    <p>A grid search over three probability paths (optimal transport, independent coupling, variance preserving) and σ<sub>min</sub> ∈ [0.001, 1.5] picked the <strong>variance-preserving path</strong> with σ<sub>min</sub> = 1:</p>
+    <p class="eq">μ<sub>t</sub> = cos(πt⁄2) · x<sub>0</sub> + sin(πt⁄2) · x<sub>1</sub></p>
+
+    <h3 class="step"><span>3</span> A Diffusion Transformer to paint the map</h3>
+    <p>The maps themselves come from a denoising diffusion model (DDPM). Training gradually adds noise to real maps and teaches the network to predict that noise:</p>
+    <p class="eq">x<sub>t</sub> = √ᾱ<sub>t</sub> · x<sub>0</sub> + √(1 − ᾱ<sub>t</sub>) · ε, &nbsp;&nbsp; loss = ‖ ε − ε<sub>θ</sub>(x<sub>t</sub>, t) ‖²</p>
+    <p>The backbone is a <strong>Diffusion Transformer (DiT)</strong>, which improves on U-Net baselines in almost every setting, adapted to our map size. It uses 12 DiT blocks with 8 attention heads each: smaller models never produced density-map patterns, and larger ones overfit or didn’t fit in the cluster’s memory. The embedding conditions every block through <strong>Adaptive LayerNorm</strong>.</p>
   </section>
+
   <section aria-labelledby="resu">
     <h2 id="resu">Results</h2>
-    <p class="muted">The main numbers, figures and comparisons to baselines.</p>
+
+    <h3 class="sub">A better encoder</h3>
+    <p>Linear probes on the embeddings show that fine-tuning keeps mass well encoded and makes the self-interaction cross-section much easier to recover:</p>
+    <div class="stats">
+      <div class="stat"><span class="stat-n">R² ≈ 0.9</span><span class="stat-l">mass prediction, before and after fine-tuning (slope 0.91)</span></div>
+      <div class="stat"><span class="stat-n">0.69 → 0.85</span><span class="stat-l">recovery of σ<sub>DM</sub>/m = 1.0, baseline → fine-tuned, with tighter uncertainty</span></div>
+    </div>
+    <p>The lower σ<sub>DM</sub>/m values still overlap, likely because such weak self-interaction barely changes how a cluster looks.</p>
+
+    <h3 class="sub">Generated embeddings</h3>
+    <figure class="fig">
+      <figcaption class="fig-t" id="fig-fm">Linear-probe R² on real vs generated embeddings</figcaption>
+      <div class="legend"><span><i style="background:#8a75f0"></i>Real (AstroPT) embeddings</span><span><i style="background:#c97a3e"></i>Generated (flow matching)</span></div><svg class="chart" viewBox="0 0 560 152" role="img" aria-labelledby="fig-fm"><line class="grid" x1="130.0" x2="130.0" y1="26" y2="130"/><text class="tick" x="130.0" y="144" text-anchor="middle">0</text><line class="grid" x1="226.0" x2="226.0" y1="26" y2="130"/><text class="tick" x="226.0" y="144" text-anchor="middle">0.25</text><line class="grid" x1="322.0" x2="322.0" y1="26" y2="130"/><text class="tick" x="322.0" y="144" text-anchor="middle">0.5</text><line class="grid" x1="418.0" x2="418.0" y1="26" y2="130"/><text class="tick" x="418.0" y="144" text-anchor="middle">0.75</text><line class="grid" x1="514.0" x2="514.0" y1="26" y2="130"/><text class="tick" x="514.0" y="144" text-anchor="middle">1</text><text class="lab" x="0" y="49">Mass</text><g class="mark"><title>Mass · real AstroPT embeddings: R² 0.89</title><path d="M130,34 H467.8 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H130 Z" fill="#8a75f0"/><rect x="130" y="32" width="424" height="18" fill="transparent"/></g><text class="val" x="477.8" y="45">0.89</text><g class="mark"><title>Mass · generated by flow matching: R² 0.87</title><path d="M130,50 H460.1 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H130 Z" fill="#c97a3e"/><rect x="130" y="48" width="424" height="18" fill="transparent"/></g><text class="val" x="470.1" y="61">0.87</text><text class="lab" x="0" y="101">σ<tspan baseline-shift='sub' font-size='9'>DM</tspan>/m</text><g class="mark"><title>σDM/m · real AstroPT embeddings: R² 0.61</title><path d="M130,86 H360.2 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H130 Z" fill="#8a75f0"/><rect x="130" y="84" width="424" height="18" fill="transparent"/></g><text class="val" x="370.2" y="97">0.61</text><g class="mark"><title>σDM/m · generated by flow matching: R² 0.73</title><path d="M130,102 H406.3 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 H130 Z" fill="#c97a3e"/><rect x="130" y="100" width="424" height="18" fill="transparent"/></g><text class="val" x="416.3" y="113">0.73</text><line class="axis" x1="130" x2="130" y1="26" y2="130"/></svg>
+      <table class="tbl">
+        <thead><tr><th></th><th>R²</th><th>MSE</th></tr></thead>
+        <tbody>
+          <tr><td>Mass · real</td><td>0.89</td><td>0.0991</td></tr>
+          <tr><td>Mass · generated</td><td>0.87</td><td>0.00567</td></tr>
+          <tr><td>σ<sub>DM</sub>/m · real</td><td>0.61</td><td>0.29</td></tr>
+          <tr><td>σ<sub>DM</sub>/m · generated</td><td>0.73</td><td>0.0393</td></tr>
+        </tbody>
+      </table>
+    </figure>
+    <p>Mass is reproduced faithfully. Generated embeddings score <em>higher</em> than real ones on σ<sub>DM</sub>/m, which sounds good but suggests the simple MLP doesn’t cover the full AstroPT manifold: its samples are a little too “predictable”. That also explains why it is so sensitive to the path and σ<sub>min</sub>.</p>
+
+    <h3 class="sub">Mode 1: generating new maps from physics</h3>
+    <p>The generated maps are coherent and not overly noisy. Since they are new samples rather than copies, we compared them to real maps statistically:</p>
+    <figure class="fig">
+      <figcaption class="fig-t" id="fig-psd">Power spectrum of generated ÷ real maps, by spatial scale</figcaption>
+      <svg class="chart" viewBox="0 0 560 230" role="img" aria-labelledby="fig-psd"><line class="grid" x1="44" x2="550" y1="196.0" y2="196.0"/><text class="tick" x="36" y="200.0" text-anchor="end">0.6</text><line class="grid" x1="44" x2="550" y1="150.5" y2="150.5"/><text class="tick" x="36" y="154.5" text-anchor="end">0.8</text><line class="ref" x1="44" x2="550" y1="105.0" y2="105.0"/><text class="tick" x="36" y="109.0" text-anchor="end">1.0</text><line class="grid" x1="44" x2="550" y1="59.5" y2="59.5"/><text class="tick" x="36" y="63.5" text-anchor="end">1.2</text><line class="grid" x1="44" x2="550" y1="14.0" y2="14.0"/><text class="tick" x="36" y="18.0" text-anchor="end">1.4</text><text class="note" x="546" y="98.0" text-anchor="end">1.0 = perfect match</text><text class="lab" x="145.2" y="220" text-anchor="middle">Large scales</text><text class="lab" x="297.0" y="220" text-anchor="middle">Mid scales</text><text class="lab" x="448.8" y="220" text-anchor="middle">Small scales</text><g class="mark"><title>Large scales: ratio ≈ 0.8 (slightly less power than real maps)</title><circle cx="145.2" cy="150.5" r="6" fill="#8a75f0" stroke="#211e2b" stroke-width="2"/><circle cx="145.2" cy="150.5" r="14" fill="transparent"/></g><text class="val" x="157.2" y="154.5">≈ 0.8</text><g class="mark"><title>Mid scales: within ±10 % of real maps (0.9–1.1)</title><rect x="290.0" y="82.2" width="14" height="45.5" rx="4" fill="#8a75f0"/><rect x="281.0" y="76.2" width="32" height="57.5" fill="transparent"/></g><text class="val" x="311.0" y="86.2">± 10 %</text><g class="mark"><title>Small scales: ratio above 1.2 (slightly more fine-grained power)</title><rect x="441.8" y="14.0" width="14" height="45.5" rx="4" fill="#8a75f0" opacity=".45"/><rect x="441.8" y="50.4" width="14" height="9.1" rx="2" fill="#8a75f0"/><rect x="432.8" y="14.0" width="32" height="51.5" fill="transparent"/></g><text class="val" x="462.8" y="63.5">&gt; 1.2</text></svg>
+    </figure>
+    <p>The power spectrum matches within ±10 % at mid scales, with slightly too little power at large scales and too much at the finest scales. Pixel values, skewness and peak counts overlap strongly with real maps, so the model captures the non-Gaussian structure of clusters, but generated maps come out <strong>systematically a bit brighter</strong> (higher total flux). That is expected: from mass and σ<sub>DM</sub>/m alone, the model can’t know the cluster’s exact geometry (e.g. ellipticity).</p>
+
+    <h3 class="sub">Mode 2: reconstructing existing maps</h3>
+    <figure class="fig">
+      <figcaption class="fig-t" id="fig-rl">Cross-correlation r(ℓ) between original and reconstructed maps</figcaption>
+      <svg class="chart" viewBox="0 0 560 160" role="img" aria-labelledby="fig-rl"><line class="grid" x1="150.0" x2="150.0" y1="12" y2="132"/><text class="tick" x="150.0" y="148" text-anchor="middle">0</text><line class="grid" x1="247.5" x2="247.5" y1="12" y2="132"/><text class="tick" x="247.5" y="148" text-anchor="middle">0.25</text><line class="grid" x1="345.0" x2="345.0" y1="12" y2="132"/><text class="tick" x="345.0" y="148" text-anchor="middle">0.5</text><line class="grid" x1="442.5" x2="442.5" y1="12" y2="132"/><text class="tick" x="442.5" y="148" text-anchor="middle">0.75</text><line class="grid" x1="540.0" x2="540.0" y1="12" y2="132"/><text class="tick" x="540.0" y="148" text-anchor="middle">1</text><text class="lab" x="0" y="31">Large scales</text><g class="mark"><title>Large scales (low ℓ): r between 0.8 and 1.0</title><rect x="462.0" y="20" width="78.0" height="14" rx="4" fill="#8a75f0"/><rect x="456.0" y="14" width="90.0" height="26" fill="transparent"/></g><text class="val" x="456.0" y="31" text-anchor="end">0.8–1</text><text class="lab" x="0" y="71">Mid scales</text><g class="mark"><title>Mid scales: r between 0.3 and 0.6</title><rect x="267.0" y="60" width="117.0" height="14" rx="4" fill="#8a75f0"/><rect x="261.0" y="54" width="129.0" height="26" fill="transparent"/></g><text class="val" x="390.0" y="71">0.3–0.6</text><text class="lab" x="0" y="111">Finest details</text><text class="note" x="154" y="111">harder: the diffusion model is stochastic</text><line class="axis" x1="150" x2="150" y1="12" y2="132"/></svg>
+    </figure>
+    <p>Reconstruction is near-perfect for the overall structure (r between 0.8 and 1.0), solid for finer details (0.3–0.6), and, as expected from a stochastic model, weaker for the very finest grain. The log-ratio of power spectra stays <strong>near 0 at every frequency</strong>, so reconstructed and original maps carry the same structure across scales.</p>
+
+    <details class="hp">
+      <summary>Training setup (found by grid search)</summary>
+      <table class="tbl">
+        <thead><tr><th></th><th>AstroPT</th><th>Flow matching</th><th>DDPM (FM)</th><th>DDPM (AstroPT)</th></tr></thead>
+        <tbody>
+          <tr><td>LR / batch / epochs</td><td>10⁻⁵ / 64 / 60</td><td>10⁻⁴ / full / 3k</td><td>3·10⁻⁴ / 32 / 250</td><td>3·10⁻⁴ / 32 / 300</td></tr>
+          <tr><td>Scheduler</td><td>cosine</td><td>–</td><td>cosine</td><td>cosine</td></tr>
+          <tr><td>Specifics</td><td>contrastive λ 0.1, τ 0.1, warm-up 5</td><td>σ<sub>min</sub> 1, variance preserving</td><td colspan="2">T = 1000, CFG 0.1, EMA 0.9999</td></tr>
+        </tbody>
+      </table>
+      <p class="muted">All models trained with AdamW on EPFL’s SCITAS cluster.</p>
+    </details>
   </section>
+
+  <section aria-labelledby="lim">
+    <h2 id="lim">Limits &amp; responsible use</h2>
+    <p>A generated map can look realistic and still break physics, and unlike a chatbot’s mistake, that is hard to spot without domain expertise. It could mislead downstream research on dark matter. We publish validation metrics with every result, recommend staying within the trained range (σ<sub>DM</sub>/m ∈ {0.01, 0.1, 0.3, 1.0} cm²/g), and advise caution with Mode 1, which is less accurate than reconstruction.</p>
+    <p>Each part (fine-tuning, flow matching, diffusion) can still be improved, and the approach could be extended to X-ray and stellar-mass maps.</p>
+  </section>
+
   <section aria-labelledby="role">
-    <h2 id="role">My role &amp; what I learned</h2>
-    <p class="muted">What you personally did, and what you’d do differently next time.</p>
-  </section>
-  <section aria-labelledby="lnk">
-    <h2 id="lnk">Links</h2>
-    <div class="actions"><a class="btn ghost sm" href="#">Code ↗</a><a class="btn ghost sm" href="#">Report ↗</a></div>
+    <h2 id="role">My role</h2>
+    <p>I built the generative heart of the pipeline: the <strong>diffusion model that turns an embedding into a density map</strong>. I implemented the Diffusion Transformer within the DDPM framework, adapted it to our maps so it predicts only the noise, and conditioned every block on the parameter embeddings through <strong>Adaptive LayerNorm</strong>. I also sized the model to 12 blocks and 8 heads: big enough for density-map patterns to appear, small enough not to overfit and to fit in the cluster’s memory.</p>
+    <p>The result is maps generated in <strong>minutes instead of the 5–7 days</strong> a numerical simulation takes, with a cross-correlation of <strong>0.8–1.0 at large scales</strong> and a log power-spectrum ratio <strong>near zero across all frequencies</strong> against the original maps.</p>
+    <!-- ✏️ Optional: add what you learned or would do differently -->
   </section>
 
   <nav class="pager" aria-label="More projects"><a href="atlas.html"><span>← Previous</span>ATLAS Project</a><span></span></nav>
