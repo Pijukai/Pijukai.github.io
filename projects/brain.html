@@ -39,8 +39,8 @@
 
   <div class="card">
     <dl class="outcome">
-      <dt>Objective</dt><dd>Reconstruct the image or sound a person perceives from EEG, a highly noisy, subject-dependent signal, fast enough for a real-time demonstrator.</dd>
-      <dt>Result</dt><dd>An EEG-to-image pipeline running end to end in 747 ms, adapting to a new person in about 7 minutes from a fraction of the usual recordings, with retrieval competitive with the state of the art.</dd>
+      <dt>Objective</dt><dd>Reconstruct the image or sound a person perceives from EEG recordings, which are highly noisy, subject-dependent multi-channel time series, fast enough for a real-time demonstrator.</dd>
+      <dt>Result</dt><dd>An EEG-to-image pipeline running end to end in 747 ms, adapting to a new person in about 7 minutes from a fraction of the usual recordings, with competitive retrieval performance.</dd>
     </dl>
   </div>
 
@@ -51,7 +51,7 @@
     <ul class="bullets">
       <li><strong>Bring image decoding close to real time</strong>, without hours of recordings or long adaptation for each new person.</li>
       <li><strong>Decode music and multimodal stimuli</strong> (image + sound), beyond the usual visual-only setting.</li>
-      <li><strong>Build the hardware and software</strong> needed to run the whole system live.</li>
+      <li><strong>Bring an out-of-service EEG setup back to life</strong>, then build the software around it to run the whole system live.</li>
     </ul>
     <p>We used <strong>THINGS-EEG2</strong> for vision: 10 participants, 64 channels, 16,740 naturalistic object images across 1,674 concepts, plus 200 held-out test concepts. For music we used <strong>NMED-T</strong> and <strong>NMED-H</strong>: 14 songs heard by up to 48 listeners. We harmonised everything onto a common 64-channel layout at 250 Hz, matching our own live EEG cap.</p>
     <p>Progress is measured with four proxy metrics: <strong>decoding accuracy</strong>, <strong>end-to-end latency</strong>, <strong>adaptation time</strong> for a new person, and the <strong>amount of recording</strong> that person needs to give.</p>
@@ -161,7 +161,7 @@
 
   <section aria-labelledby="live">
     <h2 id="live">From offline to live</h2>
-    <p>We commissioned a real acquisition setup: a 64-channel g.GAMMAcap feeding four synchronised g.USBamp amplifiers. We read them through an open-source USB path (libusb and mushu) inside a Linux VM, bypassing the manufacturer’s closed Windows driver, and timestamped EEG and stimulus markers on a single <strong>Lab Streaming Layer</strong> clock. A live epoch has exactly the shape of an offline one (training montage, 250 Hz, 240-sample windows), so the models can consume it as-is. We confirmed real, time-locked EEG with a clean eyes-closed alpha rhythm.</p>
+    <p>We didn’t build new hardware: we took an EEG acquisition setup that was out of service and hadn’t been used in a long time, and made it work again: a 64-channel g.GAMMAcap feeding four synchronised g.USBamp amplifiers. We then built the software around it. We read them through an open-source USB path (libusb and mushu) inside a Linux VM, bypassing the manufacturer’s closed Windows driver, and timestamped EEG and stimulus markers on a single <strong>Lab Streaming Layer</strong> clock. A live epoch has exactly the shape of an offline one (training montage, 250 Hz, 240-sample windows), so the models can consume it as-is. We confirmed real, time-locked EEG with a clean eyes-closed alpha rhythm.</p>
     <p>The remaining obstacle is <strong>signal quality</strong>, not software. Lab-grade training data versus our cap (impedances, line noise), the legacy channel ordering, and the much higher signal-to-noise needed for visual responses still stand between us and a valid live reconstruction. The next steps are calibration and the ~7-minute on-device adaptation characterised offline.</p>
   </section>
 
