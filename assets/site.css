@@ -1,4 +1,4 @@
-/* Shared styles for the inner pages (projects, publications, resume, contact, about).
+/* Shared styles for the inner pages (projects, publications, resume, about).
    Same night palette as the home page, desaturated so content comes first. */
 :root{
   --bg:#16141d; --bg2:#1c1926;
@@ -50,9 +50,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .links a{display:block;padding:7px 12px;border-radius:999px;color:var(--muted);text-decoration:none;font-size:15px;white-space:nowrap;transition:color .15s,background .15s}
 .links a:hover{color:var(--ink);background:rgba(255,255,255,.06)}
 .links a[aria-current=page]{color:var(--ink);background:rgba(255,255,255,.1)}
-.links a.cta{margin-left:8px;color:var(--ink);border:1px solid var(--line2)}
-.links a.cta:hover,.links a.cta[aria-current=page]{background:var(--ink);color:#17141f;border-color:var(--ink)}
-.mute{flex:none;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line2);color:var(--muted);transition:color .15s,border-color .15s}
+.mute{flex:none;margin-left:8px;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line2);color:var(--muted);transition:color .15s,border-color .15s}
 .mute:hover{color:var(--ink)}
 .mute[aria-pressed=true]{color:var(--accent);border-color:rgba(240,178,122,.4)}
 .mute svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -143,12 +141,13 @@ p+p{margin-top:12px}
 .pub:hover{border-color:var(--line);background:var(--surface)}  /* not clickable: no hover state */
 
 /* resume timeline */
-.resume-head{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px 28px}
-.resume-head .actions{align-self:end}
+.resume-head{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:16px 28px}
+.resume-head .actions{margin-top:16px}
+.nw{white-space:nowrap}
 .avatar{position:relative;width:132px;aspect-ratio:4/5;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line2);
   background:linear-gradient(160deg,#2c2740,#1b1825);display:grid;place-items:center;font:400 40px/1 'Instrument Serif',serif;color:var(--faint)}
 .avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.contact-line{margin-top:10px;font-size:14px;color:var(--faint)}
+.id-line{margin-top:10px;font-size:14px;color:var(--faint)}
 .cv p{color:var(--muted)}
 .cv h2{font:500 13px/1 'DM Sans',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);
   padding-bottom:10px;margin-bottom:18px;border-bottom:1px solid var(--line2)}
@@ -175,17 +174,6 @@ section.cv+section.cv{margin-top:44px}
 .cv-skills dt{color:var(--ink)}
 .cv-skills dd{color:var(--muted)}
 
-/* contact */
-.contacts{list-style:none;display:grid;gap:12px}
-.contact{display:grid;grid-template-columns:1fr auto;grid-template-areas:"tag btn" "val btn";align-items:center;gap:8px 16px}
-.contact .tag{grid-area:tag}
-.contact .email{grid-area:val}
-.contact .btn{grid-area:btn}
-.email{font:400 clamp(22px,3.4vw,32px)/1.2 'Instrument Serif',serif;color:var(--ink);text-decoration:none;overflow-wrap:anywhere}
-.email:hover{color:var(--accent)}
-.coffee{margin-top:12px;display:grid;gap:8px}
-.coffee p{color:var(--muted)}
-.coffee strong{color:var(--ink);font-weight:500}
 
 /* about: one chapter per side of me, revealed on scroll */
 .story{max-width:680px}
