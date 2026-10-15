@@ -33,7 +33,7 @@
     <span class="eyebrow">EPFL NeuroAI Lab · Feb 2026 — Present</span>
     <h1>BRAIN Project</h1>
     <p class="wip"><span aria-hidden="true"></span>Work in progress</p>
-    <p class="intro">Decoding what a person sees, and hears, from non-invasive brain recordings, and bringing it close enough to real time for a live demonstration. A team research project, in which I focused on the EEG foundation model and real-time decoding.</p>
+    <p class="intro">Decoding what a person sees, and hears, from non-invasive brain recordings, and bringing it close enough to real time for a live demonstration. A team research project, in which I worked on live image decoding with an EEG foundation model and on mixing images and music in the multimodal pipeline.</p>
     <ul class="kw" aria-label="Keywords"><li>EEG</li><li>Foundation models</li><li>LoRA</li><li>CLIP / CLAP</li><li>Diffusion</li><li>NeuroAI</li></ul>
   </div>
 
@@ -172,8 +172,12 @@
 
   <section aria-labelledby="role">
     <h2 id="role">My role</h2>
-    <p>I worked on decoding both the <strong>image and the sound</strong> a person perceives from EEG. On the real-time side, I fine-tuned, optimised and benchmarked an <strong>EEG foundation model with LoRA</strong>, combined with contrastive CLIP/CLAP alignment, as a replacement for task-specific EEG decoders, aiming for real-time speed without giving up accuracy.</p>
-    <p>That work led to an <strong>end-to-end EEG-to-image demo with under one second of latency</strong>. It retains around 70 % of the performance across metrics (top-k retrieval, SSIM, PixCorr…) while using as little as <strong>25 % of the data</strong> and <strong>a fifth of the training time</strong> to adapt to a new person.</p>
+    <p>I worked on two parts of the project:</p>
+    <ul class="bullets">
+      <li><strong>Real-time image decoding.</strong> I worked on the <strong>LUNA EEG foundation model</strong> with LoRA adapters and CLIP alignment, used to decode <strong>images</strong> for the live demonstrator. I fine-tuned, optimised and benchmarked it as a replacement for task-specific EEG decoders, aiming for real-time speed without giving up accuracy.</li>
+      <li><strong>Multimodal decoding.</strong> I designed the <strong>prompt composer</strong>, which turns the decoded image and music into one unified prompt, and worked out <strong>how to mix the two modalities</strong>: balancing the visual embedding against the combined text prompt when generating the image.</li>
+    </ul>
+    <p>The real-time work led to an <strong>end-to-end EEG-to-image demo with under one second of latency</strong>. It retains around 70 % of the performance across metrics (top-k retrieval, SSIM, PixCorr…) while using as little as <strong>25 % of the data</strong> and <strong>a fifth of the training time</strong> to adapt to a new person.</p>
     <!-- ✏️ Optional: add what you learned or would do differently -->
   </section>
 
