@@ -120,6 +120,8 @@ p+p{margin-top:12px}
   color:var(--accent);background:rgba(240,178,122,.1);border:1px solid rgba(240,178,122,.3)}
 .wip span{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:wip 1.8s ease-in-out infinite}
 @keyframes wip{50%{opacity:.3}}
+.wip.sm{margin:0 0 0 auto;padding:4px 9px;font-size:10.5px}
+.project .meta .wip.sm+.date{margin-left:0}
 .back{display:inline-block;margin-bottom:24px;font-size:14px;color:var(--muted);text-decoration:none}
 .back:hover{color:var(--ink)}
 .detail .page-head .kw{margin-top:4px}
