@@ -187,16 +187,17 @@ section.cv+section.cv{margin-top:44px}
 .coffee p{color:var(--muted)}
 .coffee strong{color:var(--ink);font-weight:500}
 
-/* about */
-.about{display:grid;grid-template-columns:200px 1fr;gap:40px;align-items:start}
-.portrait{aspect-ratio:4/5;border-radius:var(--radius);background:linear-gradient(160deg,#2c2740,#1b1825);border:1px solid var(--line);display:grid;place-items:center;font:400 64px/1 'Instrument Serif',serif;color:var(--faint);overflow:hidden}
-.portrait img{width:100%;height:100%;object-fit:cover;display:block}
-.lead{font:400 clamp(22px,2.6vw,28px)/1.3 'Instrument Serif',serif;color:var(--ink);margin-bottom:16px}
-.about-body p{color:var(--muted)}
-.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.facts h3{font-size:15px;margin-bottom:8px}
-.facts p,.facts ul{color:var(--muted);font-size:15px}
-.facts ul{list-style:none}
+/* about: one chapter per side of me, revealed on scroll */
+.story{max-width:680px}
+.chapter{padding:40px 0;border-top:1px solid var(--line)}
+.chapter:first-child{border-top:0;padding-top:8px}
+.chapter .num{font:500 12px/1 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.08em;color:var(--accent)}
+.chapter h2{font:400 clamp(30px,4vw,40px)/1.1 'Instrument Serif',serif;margin:10px 0 16px}
+.chapter p{color:var(--muted);font-size:17px;line-height:1.75}
+.chapter p+p{margin-top:14px}
+.chapter .actions{margin-top:22px}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
 
 /* ---------- footer ---------- */
 .foot{border-top:1px solid var(--line);color:var(--faint);font-size:14px}
@@ -222,8 +223,6 @@ section.cv+section.cv{margin-top:44px}
   .cv-edu,.cv-skills{grid-template-columns:1fr;gap:2px}
   .cv-edu dd,.cv-skills dd{margin-bottom:10px}
   .avatar{width:88px}
-  .about{grid-template-columns:1fr;gap:24px}
-  .portrait{width:140px}
   .foot-in{padding:20px 16px}
   .ambient{display:none}
 }

@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>About Me — Julien Barozet-Golbery</title>
-<meta name="description" content="About Julien Barozet-Golbery, master's student in machine learning.">
+<meta name="description" content="About Julien Barozet-Golbery: student at EPFL, aspiring ML researcher/engineer, music lover and gamer.">
 <meta name="theme-color" content="#16141d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css?v=4">
+<link rel="stylesheet" href="assets/site.css?v=5">
 </head>
 <body>
 <div class="ambient" aria-hidden="true"><div class="amb-window"><div class="amb-city"></div><div class="amb-rain far"></div><div class="amb-rain"></div></div><div class="amb-desk"></div></div>
@@ -28,48 +28,63 @@
   </nav>
 </header>
 
-<main id="main">
+<main id="main" class="detail">
   <div class="page-head">
     <span class="eyebrow">About Me</span>
     <h1>Hi, I’m Julien</h1>
   </div>
 
-  <div class="about">
-    <!-- ✏️ Replace "JB" with <img src="assets/photo.jpeg" alt="Julien Barozet-Golbery"> -->
-    <div class="portrait" aria-hidden="true">JB</div>
-    <div class="about-body">
-      <p class="lead">I’m a master’s student working toward a career in machine learning research.</p>
-      <p>Write two or three sentences here about your research interests, what you’re studying, and the questions that keep you up at night.</p>
-      <p>Add a personal line too — what you do when it’s raining outside and the training run still has 6 hours left.</p>
-      <div class="actions" style="margin-top:22px">
-        <a class="btn" href="resume.html">See my resume</a>
-        <a class="btn ghost" href="contact.html">Get in touch</a>
-      </div>
-    </div>
-  </div>
+  <!-- ✏️ One <section class="chapter"> per side of me. Each fades in as the visitor scrolls. -->
+  <article class="story">
+    <section class="chapter" aria-labelledby="ch-student">
+      <span class="num">01</span>
+      <h2 id="ch-student">Student</h2>
+      <p><!-- ✏️ Write this paragraph --></p>
+    </section>
 
-  <section aria-labelledby="more">
-    <h2 id="more">A bit more</h2>
-    <div class="facts">
-      <div class="card"><h3>Currently</h3><p>M.Sc. student at University, working on …</p></div>
-      <div class="card"><h3>Research interests</h3><ul><li>Representation learning</li><li>Optimisation</li><li>Evaluation</li></ul></div>
-      <div class="card"><h3>Outside of work</h3><p>Rainy-day reading, coffee, and a sleepy cat.</p></div>
-    </div>
-  </section>
+    <section class="chapter" aria-labelledby="ch-research">
+      <span class="num">02</span>
+      <h2 id="ch-research">ML Researcher and Engineer</h2>
+      <p><!-- ✏️ Write this paragraph --></p>
+    </section>
 
-  <section aria-labelledby="sk">
-    <h2 id="sk">Skills</h2>
-    <ul class="chips">
-      <li>Python</li><li>PyTorch</li><li>Deep learning</li><li>Statistics</li>
-      <li>Linear algebra</li><li>Experiment design</li><li>LaTeX</li>
-    </ul>
-  </section>
+    <section class="chapter" aria-labelledby="ch-music">
+      <span class="num">03</span>
+      <h2 id="ch-music">Music Lover</h2>
+      <p><!-- ✏️ Write this paragraph --></p>
+    </section>
+
+    <section class="chapter" aria-labelledby="ch-travel">
+      <span class="num">04</span>
+      <h2 id="ch-travel">Traveller</h2>
+      <p><!-- ✏️ Write this paragraph --></p>
+    </section>
+
+    <section class="chapter" aria-labelledby="ch-gamer">
+      <span class="num">05</span>
+      <h2 id="ch-gamer">Gamer</h2>
+      <p><!-- ✏️ Write this paragraph --></p>
+    </section>
+  </article>
 </main>
 
 <footer class="foot">
   <div class="foot-in"><span>© <span class="yr"></span> Julien Barozet-Golbery</span><a href="index.html">← Back home</a></div>
 </footer>
-<script>document.querySelector('.yr').textContent = new Date().getFullYear();</script>
+<script>
+{ // block scope: this page can run again when revisited without a reload (assets/router.js)
+  document.querySelector('.yr').textContent = new Date().getFullYear();
+  // each chapter fades in as it scrolls into view
+  const chapters = document.querySelectorAll('.chapter');
+  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }), { rootMargin: '0px 0px -12% 0px' });
+    chapters.forEach(c => { c.classList.add('reveal'); io.observe(c); });
+    document.addEventListener('page:leave', () => io.disconnect(), { once: true });
+  }
+}
+</script>
 <script src="assets/music.js?v=3"></script>
 <script src="assets/router.js?v=3"></script>
 </body>
